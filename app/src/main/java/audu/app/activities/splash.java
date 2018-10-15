@@ -6,16 +6,30 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.animation.AlphaAnimation;
+import android.widget.ImageView;
 
 import audu.app.R;
 
 public class splash extends AppCompatActivity {
     private Long duration = 3000L;
+    private ImageView logo_a;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        logo_a = (ImageView) findViewById(R.id.a_image);
+
+        AlphaAnimation animation1 = new AlphaAnimation(0.0f, 1.0f);
+        animation1.setDuration(1000);
+        animation1.setStartOffset(500);
+        animation1.setFillAfter(true);
+        logo_a.startAnimation(animation1);
+
+
+        //scheduleSplashScreen();
     }
 
 
