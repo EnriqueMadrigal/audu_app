@@ -25,7 +25,7 @@ import audu.app.utils.soundWaves;
 
 
 public class splash extends AppCompatActivity {
-    private Long duration = 3000L;
+    private Long duration = 5500L;
 
     private RelativeLayout a_relativeLayout;
 
@@ -411,7 +411,7 @@ public class splash extends AppCompatActivity {
 
 
 
-        //scheduleSplashScreen();
+        scheduleSplashScreen();
     }
 
 
@@ -430,7 +430,7 @@ public class splash extends AppCompatActivity {
 
                 else
                 {
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(), intro.class));
                     finish();
                 }
 

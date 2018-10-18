@@ -11,9 +11,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-        </intent-filter>
+                <action android:name="android.intent.action.MAIN"
+                    android:screenOrientation="portrait"/>
+            </intent-filter>
         </activity>
         <activity android:name=".activities.splash">
             <intent-filter>
@@ -23,11 +23,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
         </activity>
         <activity android:name=".activities.login" />
-        <activity android:name=".activities.register"></activity>
+        <activity android:name=".activities.register" />
+        <activity android:name=".activities.intro"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>
