@@ -85,7 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:ellipsize="none"
-                        android:maxLines="2"
+                        android:maxLines="3"
                         android:text="Somos la plataforma que lleva la \n magia de las historias a tus oidos."
                         android:textColor="@android:color/white"
                         android:textSize="60sp"

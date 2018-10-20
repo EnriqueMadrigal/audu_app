@@ -5,4 +5,19 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#FFFFFF</color>
 
+
+
+    <color name="fullPurple">#805EF5</color>
+    <color name="fullAqua">#27BAC7</color>
+    <color name="middlePurple">#5575D3</color>
+    <color name="middleBlue">#4594D8</color>
+    <color name="aPurple">#7035F8</color>
+    <color name="lightPurple">#F7F5FE</color>
+    <color name="ultraLightPurple">#FCFCFE</color>
+    <color name="mainBlue">#2150C2</color>
+    <color name="barBlue">#2156CB</color>
+    <color name="greenColor">#2CBE35</color>
+    <color name="greenColor2">#2CBE85</color>
+
+
 </resources>

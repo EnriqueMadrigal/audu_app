@@ -154,8 +154,8 @@ public class intro extends AppCompatActivity {
         firstButton.setText("Anterior");
         lastButton.setText("Omitir");
 
-        msg1.setText("¡ TE DAMOS LA BIENVENIDA 2!");
-        msg2.setText("Somos la plataforma que lleva la \n magia de las historias a tus oidos 2.");
+        msg1.setText("Encuentra lo que mas te guste");
+        msg2.setText("¡ El primer capítulo es gratis!\n Prueba lo que quieras y \n encuentra tu historia favorita");
     }
 
 }
