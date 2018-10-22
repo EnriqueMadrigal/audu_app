@@ -142,6 +142,9 @@ public class splash extends AppCompatActivity {
         a_relativeLayout.addView(udu_logo, params5);
 
 
+        float moveposx1 = (curScreenWidht - (curWidthA + curLogoWidth)) /2;
+        float moveposx5 = moveposx1 + curLogoWidth;
+
 
 
         // Animacion de la A
@@ -297,7 +300,7 @@ public class splash extends AppCompatActivity {
 
 // Logo Move Right
 
-        final float amountToMoveRightLogo =  curWidthA*2 - posx5;
+        final float amountToMoveRightLogo =  posx5 - moveposx1;
 
         //move to the Right
         TranslateAnimation anim2 = new TranslateAnimation(0, amountToMoveRightLogo, 0, 0);
@@ -369,7 +372,7 @@ public class splash extends AppCompatActivity {
         RelativeLayout.LayoutParams paramsHead = (RelativeLayout.LayoutParams) head3.getLayoutParams();
         int curHeadPosX = paramsHead.leftMargin;
 
-        ValueAnimator animator = ValueAnimator.ofInt(curHeadPosX, (int) curWidthA-20);
+        ValueAnimator animator = ValueAnimator.ofInt(curHeadPosX, (int) moveposx1);
         //animator.setValues(propertyRadius);
         animator.setDuration(1000);
         animator.setStartDelay(4500);
