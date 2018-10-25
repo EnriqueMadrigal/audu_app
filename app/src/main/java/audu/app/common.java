@@ -16,6 +16,43 @@ public class common {
 
     public static final String API_URL_BASE = "https://www.audu.app/dashboard/webservice/app/";
 
+    public static boolean userHasLogged = false;
+    public static  String userName;
+    //static var IMAGEN_USER: UIImage?
+
+    public  static boolean hasLoadedData = false;
+    public static boolean isLoadingData = false;
+
+    public static String VAR_USERNAME = "userName";
+    public static String VAR_USERID = "userID";
+
+    public static String VAR_HAS_ACCEPTED_TERMS = "HAS_ACCEPTED_TERMS";
+    public static String VAR_USER_HAS_LOGGED = "USER_HAS_LOGGED";
+    public static String VAR_USER_IMAGE_PATH = "USER_IMAGE_PATH";
+    public static String VAR_USER_NAME = "USER_NAME";
+    public static String VAR_USER_LASTNAME = "USER_LASTNAME";
+    public static String VAR_USER_EMAIL = "USER_EMAIL";
+    public static String VAR_USER_SEX = "USER_SEX";
+    public static String VAR_USER_BIRTHDAY = "USER_BIRTHDAY";
+    public static String VAR_USER_STARTDATE = "USER_STARTDATE";
+    public static String VAR_USER_PASSWORD = "USER_PASSWORD";
+    public static String VAR_USER_COUNTRY_CODE = "USER_COUNTRY_CODE";
+    public static String VAR_USER_PHONE = "USER_PHONE";
+    public static String VAR_USER_ID = "USER_ID";
+    public static String VAR_USER_FECHA_PAGO = "USER_FECHA_PAGO";
+    public static String VAR_USER_FECHA_PROX = "USER_FECHA_PROX";
+    public static String VAR_USER_AVATAR = "USER_AVATAR";
+    public static String VAR_PREFERENCES_CATEGORIES = "USER_PREFERENCES_CATEGORIES";
+    public static String VAR_SHOW_MYBOOKS = "SHOW_MYBOOKS";
+    public static String VAR_USER_SUSCRIPTION = "0";
+    public static String VAR_TOKEN_ID = "USER_TOKEN_ID";
+    public static String VAR_DEVICE_SESSION_ID = "DEVICE_SESSION_ID";
+
+
+    public static String[] avateres = {"men_avatar", "woman_avatar"};
+
+
+
 
     public static float getScreenWidthPixels(Context context)
     {

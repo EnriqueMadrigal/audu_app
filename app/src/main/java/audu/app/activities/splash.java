@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 
 import audu.app.R;
 import audu.app.common;
+import audu.app.util;
 import audu.app.utils.soundWaves;
 
 
@@ -427,13 +428,13 @@ public class splash extends AppCompatActivity {
             public void run() {
 
                 if (!checkUser()) {
-                    startActivity(new Intent(getApplicationContext(), login.class));
+                    startActivity(new Intent(getApplicationContext(), intro.class));
                     finish();
                 }
 
                 else
                 {
-                    startActivity(new Intent(getApplicationContext(), intro.class));
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }
 
@@ -456,7 +457,13 @@ public class splash extends AppCompatActivity {
        // if (user_id !=0 ) return true;
       //  else return  false;
 
-        return true;
+        util Util = new util(this);
+        if (Util.getUserId()!=0)
+        {
+            return true;
+        }
+
+        return false;
     }
 
 

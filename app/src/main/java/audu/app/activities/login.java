@@ -15,8 +15,14 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import audu.app.R;
 import audu.app.common;
+import audu.app.models.User_Settings;
+import audu.app.util;
 import audu.app.utils.HttpClient;
 
 public class login extends AppCompatActivity {
@@ -123,23 +129,37 @@ private String TAG = "Login";
                 if (json.getInt("error") == 0) // No hay errores continuar
                 {
                     JSONObject user = json.getJSONObject( "message" );
-                   // Integer UserId = user.getInt("id");
-                   // Integer permiso = user.getInt("permiso");
 
-                    /*
-                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences( this );
-                    SharedPreferences.Editor editor = sharedPref.edit();
+                    Integer Suscripcion = user.getInt("idSuscripcion");
+                    String nombreUsuario = user.getString("nombreUsuario");
+                    String emailUsuario = user.getString("emailUsuario");
+                    String fechaRegistro = user.getString("fechaRegistro");
 
-                    editor.putInt(common.VAR_USER_ID, UserId);
-                    editor.putInt(common.VAR_USER_PERMISOS, permiso);
-                    editor.putString(common.VAR_USER_NAME, nombre);
-                    editor.putString(common.VAR_USER_APELLIDOS, apellidos);
-                    editor.commit();
 
-                    */
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date convertedDate = new Date();
+                    try {
+                        convertedDate = simpleDateFormat.parse(fechaRegistro);
+                    } catch (ParseException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        convertedDate = new Date();
+                    }
 
-                    //Log.d("Login",nombre);
-                    //Log.d("Login",apellidos);
+
+                    User_Settings newUserSettings = new User_Settings();
+
+                    newUserSettings.set_name(nombreUsuario);
+                    newUserSettings.set_email(emailUsuario);
+                    newUserSettings.set_userid(Suscripcion);
+                    newUserSettings.set_start_date(convertedDate);
+
+                    util Util = new util(this);
+                    Util.saveUserSetting(newUserSettings);
+                    Util.setUserName(nombreUsuario);
+                    Util.setUserId(Suscripcion);
+                    Util.userHasLogged();
+                    Util.setSuscripcion("0");
 
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
