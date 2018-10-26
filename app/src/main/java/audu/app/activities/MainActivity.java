@@ -12,6 +12,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -32,17 +34,25 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import audu.app.R;
+import audu.app.adapters.bookGridAdapter;
 import audu.app.common;
 import audu.app.models.Categoria_Class;
 import audu.app.models.User_Settings;
 import audu.app.util;
 import audu.app.utils.HttpClient;
+import audu.app.utils.IViewHolderClick;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView menuName;
     private TextView menuEmail;
     private ImageView menuImage;
+
+    private bookGridAdapter _adapter;
+    private ArrayList<bookGridAdapter.Item> _items;
+
+    private RecyclerView _recyclerView;
+
 
     private NavigationView navigationView;
 
@@ -84,6 +94,38 @@ public class MainActivity extends AppCompatActivity {
         menuName = (TextView) headerView.findViewById(R.id.navview_text1);
         menuEmail = (TextView) headerView.findViewById(R.id.navview_text2);
         menuImage = (ImageView) headerView.findViewById(R.id.navview_image);
+
+
+        _items = new ArrayList<bookGridAdapter.Item>();
+
+        for(int i=0;i<10;i++)
+        {
+            bookGridAdapter.Item  newItem = new bookGridAdapter.Item(i,"Title " + String.valueOf(i));
+            _items.add(newItem);
+        }
+
+        LinearLayoutManager manager
+                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
+        _adapter = new bookGridAdapter( context, _items, new IViewHolderClick()
+        {
+            @Override
+            public void onClick( int position )
+            {
+                //onHomeGridItemSelected( position );
+                Log.d(TAG, "book Selected");
+            }
+        } );
+
+
+
+        _recyclerView = (RecyclerView) findViewById( R.id.RecyclerView );
+        _recyclerView.setHasFixedSize( false );
+        _recyclerView.setAdapter( _adapter );
+        _recyclerView.setLayoutManager( manager );
+       // _recyclerView.addItemDecoration( new SpacesItemDecoration( columns, 12 ) );
+
+        _recyclerView.setItemViewCacheSize(0);
 
 
 
