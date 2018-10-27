@@ -1,6 +1,7 @@
 package audu.app.models;
+import java.io.Serializable;
 
-public class Categoria_Class {
+public class Categoria_Class implements  Serializable  {
     private Integer _id;
     private String _name;
 

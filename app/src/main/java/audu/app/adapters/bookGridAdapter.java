@@ -12,15 +12,19 @@ import java.io.File;
 import java.util.ArrayList;
 
 import audu.app.R;
+import audu.app.common;
+import audu.app.models.Libro_Class;
 import audu.app.utils.IViewHolderClick;
+import com.squareup.picasso.Picasso;
+
 
 public class bookGridAdapter extends RecyclerView.Adapter<bookGridAdapter.ViewHolder>
 {
     private Context _context;
-    private ArrayList<Item> _items;
+    private ArrayList<Libro_Class> _items;
     private IViewHolderClick _listener;
 
-    public bookGridAdapter( Context context, ArrayList<Item> items, IViewHolderClick listener )
+    public bookGridAdapter( Context context, ArrayList<Libro_Class> items, IViewHolderClick listener )
     {
         _context = context;
         _items = items;
@@ -55,16 +59,18 @@ public class bookGridAdapter extends RecyclerView.Adapter<bookGridAdapter.ViewHo
     @Override
     public void onBindViewHolder( ViewHolder holder, int position )
     {
-        Item item = _items.get( position );
-
-        if( item.getResource() != -1 )
-        {
-            holder.getIconView().setImageResource( item.getResource() );
-        }
+        Libro_Class item = _items.get( position );
 
 
 
-        else if( item.getIconMosaic().trim().length() > 0 )
+       // if( item.getResource() != -1 )
+       // {
+       //     holder.getIconView().setImageResource( item.getResource() );
+      //  }
+
+
+
+        if( item.get_portada().length() > 0 )
         {
             /*
             File f = new File( Common.getBaseDirectory(), String.format( "assets/html/%s", item.getIconMosaic() ) );
@@ -112,6 +118,20 @@ public class bookGridAdapter extends RecyclerView.Adapter<bookGridAdapter.ViewHo
 */
 
         }
+
+        else if (item.get_idLibro() >0)
+        {
+            String curLink = common.API_URL_BASE + "getPortada.php?idLibro=" + String.valueOf(item.get_idLibro());
+
+            if (curLink.length()>8) {
+                Picasso.with(_context)
+                        .load(curLink)
+                        .placeholder(R.drawable.placeholder)
+                        .into(holder.getIconView());
+            }
+
+        }
+
         else
         {
             //holder.getIconView().setImageResource( android.R.color.transparent );
@@ -163,69 +183,5 @@ public class bookGridAdapter extends RecyclerView.Adapter<bookGridAdapter.ViewHo
         }
     }
 
-    public static class Item
-    {
-        private int _resource;
-        private String _iconMosaic;
-        private int _bookID;
-        private String _bookTitle = "";
 
-
-        public Item( int bookID, String iconMosaic, String bookTitle )
-        {
-            _bookID = bookID ;
-            _iconMosaic = iconMosaic;
-            _resource = -1;
-            _bookTitle = bookTitle;
-
-        }
-
-
-        public Item( int bookID, String bookTitle )
-        {
-            _bookID = bookID;
-            _resource = -1;
-            _bookTitle = bookTitle;
-
-        }
-
-
-        public Item( int bookID, int resource, String bookTitle  )
-        {
-            _bookID = bookID;
-            _iconMosaic = "";
-            _resource = resource;
-            _bookTitle = bookTitle;
-
-        }
-
-        public int getBookID()
-        {
-            return _bookID;
-        }
-
-        public String getIconMosaic()
-        {
-            return _iconMosaic;
-        }
-
-        public void setIconMosaic( String iconMosaic )
-        {
-            _iconMosaic = iconMosaic;
-        }
-
-        public int getResource()
-        {
-            return _resource;
-        }
-
-        public void setResource( int resource )
-        {
-            _resource = resource;
-        }
-
-
-        public String getBookTitle() { return _bookTitle;}
-
-    }
 }

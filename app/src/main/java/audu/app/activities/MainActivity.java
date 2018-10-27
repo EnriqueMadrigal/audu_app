@@ -1,12 +1,16 @@
 package audu.app.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -36,9 +40,12 @@ import java.util.Date;
 import audu.app.R;
 import audu.app.adapters.bookGridAdapter;
 import audu.app.common;
+import audu.app.fragments.home_fragment;
 import audu.app.models.Categoria_Class;
+import audu.app.models.Libro_Class;
 import audu.app.models.User_Settings;
 import audu.app.util;
+import audu.app.utils.BooksDB;
 import audu.app.utils.HttpClient;
 import audu.app.utils.IViewHolderClick;
 
@@ -47,16 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView menuName;
     private TextView menuEmail;
     private ImageView menuImage;
-
-    private bookGridAdapter _adapter;
-    private ArrayList<bookGridAdapter.Item> _items;
-
-    private RecyclerView _recyclerView;
-
-
     private NavigationView navigationView;
-
-    private ArrayList<Categoria_Class> _categorias;
 
     private Context context;
     private boolean _isSearchVisible = false;
@@ -65,7 +63,15 @@ public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
 
     private String TAG = "MainActivity";
-    @Override
+
+    private home_fragment MainFragment;
+    private ArrayList<Categoria_Class> _categorias;
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
+
+
+
+
+@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -96,37 +102,13 @@ public class MainActivity extends AppCompatActivity {
         menuImage = (ImageView) headerView.findViewById(R.id.navview_image);
 
 
-        _items = new ArrayList<bookGridAdapter.Item>();
-
-        for(int i=0;i<10;i++)
-        {
-            bookGridAdapter.Item  newItem = new bookGridAdapter.Item(i,"Title " + String.valueOf(i));
-            _items.add(newItem);
-        }
-
-        LinearLayoutManager manager
-                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-
-        _adapter = new bookGridAdapter( context, _items, new IViewHolderClick()
-        {
-            @Override
-            public void onClick( int position )
-            {
-                //onHomeGridItemSelected( position );
-                Log.d(TAG, "book Selected");
-            }
-        } );
+       // MainFragment = new home_fragment();
+       // getSupportFragmentManager().beginTransaction().setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right ).replace( R.id.fragment_container, MainFragment, "HOME" ).commit();
 
 
+        //-------------------
 
-        _recyclerView = (RecyclerView) findViewById( R.id.RecyclerView );
-        _recyclerView.setHasFixedSize( false );
-        _recyclerView.setAdapter( _adapter );
-        _recyclerView.setLayoutManager( manager );
-       // _recyclerView.addItemDecoration( new SpacesItemDecoration( columns, 12 ) );
-
-        _recyclerView.setItemViewCacheSize(0);
-
+    //--------------
 
 
         util Util = new util(this);
@@ -159,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             menuImage.setImageResource(id);
         }
 
-        getCategorias();
+
 
         //////////
         navigationView.setNavigationItemSelectedListener(
@@ -174,7 +156,21 @@ public class MainActivity extends AppCompatActivity {
 
                 });
                         /////////
+
+///// Verificar permisos
+    if (ContextCompat.checkSelfPermission(context,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(this,
+                new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
     }
+    else
+    {
+        getCategorias();
+    }
+
+
+}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -223,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             case R.id.go_search:
-                //handleSearch();
+                handleSearch();
                 return true;
 
         }
@@ -245,8 +241,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         MenuItem newItem = menu.add(100,1001,100,"Configuración");
+        getLibros();
 
     }
+
+    private void AddLibros()
+    {
+        MainFragment = new home_fragment();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right ).replace( R.id.fragment_container, MainFragment, "HOME" ).commit();
+
+
+    }
+
 
 
     private void getCategorias() {
@@ -274,6 +280,32 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+
+    }
+    private void getLibros()
+    {
+        if( common.haveInternetPermissions(this, "Login") ) // Revisar permisos de internet
+        {
+
+            if (common.isOnline(this)) // Revisar si tenemos conexión
+            {
+                _categorias = new ArrayList<>();
+
+                new loadLibros().execute();
+                //Intent intent = new Intent();
+                //intent.setClass(context, presentacion.class);
+                //finish();
+                //startActivity(intent);
+
+            }
+
+            else
+            {
+                common.showWarningDialog("! Sin conexión ¡", "Favor de revisar su conexión de Datos..", this);
+                //alertDialog.dismiss();
+            }
+
+        }
 
     }
 
@@ -346,6 +378,11 @@ public class MainActivity extends AppCompatActivity {
     {
         if( response.getCode() == 200 )
         {
+
+            BooksDB db = new BooksDB(context);
+            db.open();
+            db.deleteCategorias();
+
             try
             {
                 JSONObject json = new JSONObject( response.getResponse() );
@@ -360,7 +397,8 @@ public class MainActivity extends AppCompatActivity {
                     Categoria_Class newCat = new Categoria_Class();
                     newCat.set_id(id);
                     newCat.set_name(nombre);
-                    _categorias.add(newCat);
+                    //_categorias.add(newCat);
+                    db.insert(newCat);
 
                 }
 
@@ -371,15 +409,21 @@ public class MainActivity extends AppCompatActivity {
                 // Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
             }
 
+            ArrayList<Categoria_Class> categorias = db.getCategorias();
+            db.close();
+
+            for (Categoria_Class categoria: categorias)
+            {
+
+                _categorias.add(categoria);
+            }
+
             AddCategoriastoMenu();
         }
         else {
             //Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
         }
     }
-
-
-
     private class loadCategorias extends AsyncTask<Void, Void, HttpClient.HttpResponse>
     {
         ProgressDialog _progressDialog;
@@ -421,6 +465,108 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+///////// Libros
+
+    private void handleSentLibros( HttpClient.HttpResponse response )
+    {
+        if( response.getCode() == 200 )
+        {
+
+            BooksDB db = new BooksDB(context);
+            db.open();
+            db.deleteLibros();
+
+            try
+            {
+                JSONObject json = new JSONObject( response.getResponse() );
+                JSONArray libros = json.getJSONArray("libros");
+
+                for (int i = 0; i < libros.length(); i++)
+                {
+                    JSONObject row = libros.getJSONObject(i);
+                    int id = row.getInt("idLibro");
+                    String titulo = row.getString("titulo");
+                    String autor = row.getString("autor");
+                    String narrador = row.getString("narrador");
+                    String editorial = row.getString("editorial");
+                    String sinopsis = row.getString("sinopsis");
+                    String categorias = row.getString("categorias");
+                    String portada = row.getString("portada");
+                    String trailer = row.getString("trailer");
+
+                    Libro_Class newLibro = new Libro_Class();
+                    newLibro.set_idLibro(id);
+                    newLibro.set_titulo(titulo);
+                    newLibro.set_autor(autor);
+                    newLibro.set_narrador(narrador);
+                    newLibro.set_editorial(editorial);
+                    newLibro.set_sinopsis(sinopsis);
+                    newLibro.set_categorias(categorias);
+                    //newLibro.set_portada(portada);
+                    newLibro.set_portada("");
+                    newLibro.set_trailer(trailer);
+
+                    db.insert(newLibro);
+
+                }
+
+            }
+            catch( Exception e )
+            {
+                android.util.Log.e( "JSONParser", "Cant parse: " + e.getMessage() );
+                // Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
+            }
+
+            ArrayList<Libro_Class> libros = db.getLibros();
+            db.close();
+
+             AddLibros();
+        }
+        else {
+            //Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
+            AddLibros();
+        }
+    }
+    private class loadLibros extends AsyncTask<Void, Void, HttpClient.HttpResponse>
+    {
+        ProgressDialog _progressDialog;
+
+        public loadLibros()
+        {
+
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            _progressDialog = ProgressDialog.show( MainActivity.this, "Espera un momento..", "Obteniendo Libros..", true );
+
+
+        }
+
+        @Override
+        protected HttpClient.HttpResponse doInBackground( Void... arg0 )
+        {
+
+            ContentValues params = new ContentValues();
+
+            HttpClient.HttpResponse response = HttpClient.post( common.API_URL_BASE + "getLibrosData.php", params );
+            android.util.Log.d( "TEST", String.format( "HTTP CODE: %d RESPONSE: %s", response.getCode(), response.getResponse() ) );
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute( HttpClient.HttpResponse result )
+        {
+            super.onPostExecute( result );
+            _progressDialog.dismiss();
+            handleSentLibros( result );
+
+
+        }
+    }
 
 
 

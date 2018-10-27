@@ -5,10 +5,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,6 +53,8 @@ public class common {
 
     public static String[] avateres = {"men_avatar", "woman_avatar"};
 
+
+    public static final String BASE_DIRECTORY = ".audu";
 
 
 
@@ -161,6 +165,15 @@ public class common {
     }
 
 
+    public static String getBaseDirectory()
+
+    {
+        //File file = new File( Environment.getExternalStorageDirectory(), BASE_DIRECTORY );
+        File file =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        boolean creado = file.mkdirs();
+        return file.getAbsolutePath();
+
+    }
 
 
 }

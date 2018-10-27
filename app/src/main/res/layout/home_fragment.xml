@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.home_fragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorWhite">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:id="@+id/home_fragment_layout"
+            android:background="@drawable/img_head1">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <audu.app.utils.AutoResizeTextView
+        android:id="@+id/homeMsg1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:ellipsize="none"
+        android:maxLines="2"
+        android:text="¡ Escucha todos nuestros libros de manera ilimitada !"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingRight="20dp"
+        android:paddingEnd="20dp"
+        android:gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+    <audu.app.utils.AutoResizeTextView
+        android:id="@+id/homeMsg2"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:ellipsize="none"
+        android:maxLines="2"
+        android:text="Suscríbete por tan solo $149mxn"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingRight="20dp"
+        android:paddingEnd="20dp"
+        android:gravity="center"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:weightSum="1">
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.8"
+        android:text="SUSCRIBIRME"
+        android:textSize="16sp"
+        android:textColor="@color/aPurple"
+        android:background="@drawable/button1"
+        android:id="@+id/btnLoginIniciar"/>
+    </LinearLayout>
+
+</LinearLayout>
+
+
+ </RelativeLayout>
+
+ <ScrollView
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/parent_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+ </ScrollView>
+
+
+    </LinearLayout>
+
+</FrameLayout>
