@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Categoria_Class> _categorias;
     private ArrayList<String> _favoritos;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private static final int MENU_CONFIGURACION = 1001;
 
 
 
@@ -149,7 +150,14 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-            Log.d(TAG,"Se seleccion" + String.valueOf(menuItem.getItemId()));
+            Log.d(TAG,"Se seleccion " + String.valueOf(menuItem.getItemId()));
+
+                int curItemId = menuItem.getItemId();
+
+                if (curItemId == MENU_CONFIGURACION)
+                {
+                    close_session();
+                }
 
                         drawerLayout.closeDrawers();
                         return true;
@@ -229,6 +237,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void close_session()
+    {
+
+        util Util = new util(this);
+        Util.clearUserId();
+        Util.clearUserName();
+        Util.clearUserSettings();
+
+
+        Intent intent = new Intent();
+        intent.setClass(context, intro.class);
+        finish();
+        startActivity(intent);
+
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
+
     private void AddCategoriastoMenu()
     {
         final Menu menu = navigationView.getMenu();
@@ -241,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        MenuItem newItem = menu.add(100,1001,100,"Configuración");
+        MenuItem newItem = menu.add(100,MENU_CONFIGURACION,100,"Configuración");
 
         getLibros();
 
@@ -311,32 +342,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void getFavoritos()
-    {
-        if( common.haveInternetPermissions(this, "Login") ) // Revisar permisos de internet
-        {
 
-            if (common.isOnline(this)) // Revisar si tenemos conexión
-            {
-                _categorias = new ArrayList<>();
-
-                new loadFavoritos().execute();
-                //Intent intent = new Intent();
-                //intent.setClass(context, presentacion.class);
-                //finish();
-                //startActivity(intent);
-
-            }
-
-            else
-            {
-                common.showWarningDialog("! Sin conexión ¡", "Favor de revisar su conexión de Datos..", this);
-                //alertDialog.dismiss();
-            }
-
-        }
-
-    }
 
 //////// Search
 
@@ -596,83 +602,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-
-    private void handleSentFavoritos( HttpClient.HttpResponse response )
-    {
-        if( response.getCode() == 200 )
-        {
-
-            _favoritos = new ArrayList<>();
-
-
-           try
-            {
-                JSONObject json = new JSONObject( response.getResponse() );
-                JSONArray libros = json.getJSONArray("favoritos");
-
-                for (int i = 0; i < libros.length(); i++)
-                {
-                    JSONObject row = libros.getJSONObject(i);
-                    String id = row.getString("idAudioLibro");
-                 _favoritos.add(id);
-                }
-
-            }
-            catch( Exception e )
-            {
-                android.util.Log.e( "JSONParser", "Cant parse: " + e.getMessage() );
-                // Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
-            }
-
-
-        }
-        else {
-            //Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
-
-        }
-    }
-    private class loadFavoritos extends AsyncTask<Void, Void, HttpClient.HttpResponse>
-    {
-        ProgressDialog _progressDialog;
-
-        public loadFavoritos()
-        {
-
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            super.onPreExecute();
-            _progressDialog = ProgressDialog.show( MainActivity.this, "Espera un momento..", "Obteniendo Libros..", true );
-
-
-        }
-
-        @Override
-        protected HttpClient.HttpResponse doInBackground( Void... arg0 )
-        {
-
-            ContentValues params = new ContentValues();
-
-            HttpClient.HttpResponse response = HttpClient.post( common.API_URL_BASE + "getfavoritos.php", params );
-            android.util.Log.d( "TEST", String.format( "HTTP CODE: %d RESPONSE: %s", response.getCode(), response.getResponse() ) );
-
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute( HttpClient.HttpResponse result )
-        {
-            super.onPostExecute( result );
-            _progressDialog.dismiss();
-            handleSentFavoritos( result );
-
-
-        }
-    }
-
 
 
 }

@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,13 +47,14 @@ public class home_fragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public static final String TAG = "mainf";
+    public static final String TAG = "Home Fragment";
     private FragmentActivity myContext;
 
 
     private bookGridAdapter _adapter1;
     private bookGridAdapter _adapter2;
     private bookGridAdapter _adapter3;
+    private bookGridAdapter _adapter4;
 
     private ArrayList<Libro_Class> _libros;
     private RelativeLayout imageLayout;
@@ -133,13 +136,13 @@ public class home_fragment extends Fragment {
         BooksDB db = new BooksDB(myContext);
         db.open();
         _libros = db.getLibros();
+        ArrayList<Libro_Class>  _favoritos = db.getLibrosOrderLikes();
         db.close();
-
 
 
         final ArrayList<Libro_Class> nuevos = new ArrayList<>();
         final ArrayList<Libro_Class> recomendados = new ArrayList<>();
-        ArrayList<Libro_Class> favoritos = new ArrayList<>();
+        final ArrayList<Libro_Class> favoritos = new ArrayList<>();
         ArrayList<Libro_Class> mislibros = new ArrayList<>();
 
         //Obtener los últimos
@@ -167,6 +170,7 @@ public class home_fragment extends Fragment {
                 //onHomeGridItemSelected( position );
                 Libro_Class curLibro = nuevos.get(position);
                 Log.d(TAG, "book Selected " + String.valueOf(curLibro.get_idLibro()));
+                show_detalle(curLibro);
             }
         } );
 
@@ -200,6 +204,55 @@ public class home_fragment extends Fragment {
                 //onHomeGridItemSelected( position );
                 Libro_Class curLibro = recomendados.get(position);
                 Log.d(TAG, "book Selected " + String.valueOf(curLibro.get_idLibro()));
+                show_detalle(curLibro);
+            }
+        } );
+
+
+
+        //Obtener Favoritos
+
+        if (_favoritos.size() > 10)
+        {
+
+            for(int i=0;i<=10;i++)
+            {
+                favoritos.add(_favoritos.get(i));
+            }
+        }
+        else
+        {
+
+            for(int i=0;i<_favoritos.size();i++)
+            {
+                favoritos.add(_favoritos.get(i));
+            }
+        }
+
+
+        _adapter3 = new bookGridAdapter( myContext, favoritos, new IViewHolderClick()
+        {
+            @Override
+            public void onClick( int position )
+            {
+                //onHomeGridItemSelected( position );
+                Libro_Class curLibro = favoritos.get(position);
+                Log.d(TAG, "book Selected " + String.valueOf(curLibro.get_idLibro()));
+                show_detalle(curLibro);
+            }
+        } );
+
+        // Mis libros
+
+        mislibros = new ArrayList<>();
+        _adapter4 = new bookGridAdapter( myContext, mislibros, new IViewHolderClick()
+        {
+            @Override
+            public void onClick( int position )
+            {
+                //onHomeGridItemSelected( position );
+                Libro_Class curLibro = favoritos.get(position);
+                Log.d(TAG, "book Selected " + String.valueOf(curLibro.get_idLibro()));
             }
         } );
 
@@ -207,6 +260,8 @@ public class home_fragment extends Fragment {
         // Add LIne
         AddLine(parent_layout,"Nuevos Lanzamientos", _adapter1);
         AddLine(parent_layout,"Recomendados", _adapter2);
+        AddLine(parent_layout,"Favoritos", _adapter3);
+        AddLine(parent_layout,"Mis Libros", _adapter4);
         //AddLine(parent_layout,"Nuevos Lanzamientos", _items);
         //AddLine(parent_layout,"Nuevos Lanzamientos", _items);
         //AddLine(parent_layout,"Nuevos Lanzamientos", _items);
@@ -217,6 +272,21 @@ public class home_fragment extends Fragment {
 
         return _view;
     }
+
+
+    private void show_detalle(Libro_Class curLibro)
+    {
+
+        FragmentManager fragmentManager = getFragmentManager();
+        detalle _detalle = detalle.newInstance(curLibro);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+        fragmentTransaction.replace( R.id.fragment_container,_detalle, "Detalle" );
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

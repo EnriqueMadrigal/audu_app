@@ -91,6 +91,41 @@ public class BooksDB {
     }
 
 
+    public ArrayList<Libro_Class> getLibros()
+    {
+        ArrayList<Libro_Class> libros = new ArrayList<>();
+        ArrayList<Categoria_Class> categorias = new ArrayList<>();
+
+        String [] columnas = new String[] {"idLibro", "titulo", "autor", "narrador", "editorial", "ano", "sinopsis", "categorias", "portada", "trailer","likes"};
+        Cursor cursor = _database.query("libros",columnas, null, null, null, null,"idLibro" );
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast())
+        {
+            Libro_Class curItem = new Libro_Class();
+            curItem.set_idLibro(cursor.getInt(0));
+            curItem.set_titulo(cursor.getString(1));
+            curItem.set_autor(cursor.getString(2));
+            curItem.set_narrador(cursor.getString(3));
+            curItem.set_editorial(cursor.getString(4));
+            curItem.set_ano(cursor.getString(5));
+            curItem.set_sinopsis(cursor.getString(6));
+            curItem.set_categorias(cursor.getString(7));
+            curItem.set_portada(cursor.getString(8));
+            curItem.set_trailer(cursor.getString(9));
+            curItem.set_likes(cursor.getInt(10));
+
+            libros.add(curItem);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+
+
+        return libros;
+    }
+
+
     public ArrayList<Libro_Class> getLibrosOrderLikes()
     {
         ArrayList<Libro_Class> libros = new ArrayList<>();

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.detalle">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/lightPurple"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="160dp"
+            android:orientation="horizontal"
+            android:background="@color/colorWhite">
+
+            <ImageView
+                android:id="@+id/fragment_detalle_image"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:src="@drawable/placeholder"
+                android:scaleType="fitCenter"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fragment_detalle_titulo"
+                    style="@style/NormalBlackBoldSmallField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Titulo"/>
+
+                <TextView
+                    android:id="@+id/fragment_detalle_autor"
+                    style="@style/NormalBlackSmallField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Autor"/>
+
+                <TextView
+                    android:id="@+id/fragment_detalle_ano"
+                    style="@style/NormalBlackSmallField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ano"/>
+
+                <TextView
+                    android:id="@+id/fragment_detalle_editorial"
+                    style="@style/NormalBlackSmallField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Editorial"/>
+
+                <TextView
+                    android:id="@+id/fragment_detalle_narrador"
+                    style="@style/NormalBlackSmallField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Narrador"/>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp"/>
+
+                <Button
+                    android:layout_width="140dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/btn_favoritos"
+                    android:gravity="left|center_vertical"
+                    android:text="               Añadir a favoritos"
+                    android:textSize="10dp"
+                    android:textColor="@color/colorBlack"
+                    android:drawablePadding="-15sp"/>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center">
+
+
+
+
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorWhite"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorLightGray"/>
+
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@color/colorTransparent"
+                android:gravity="center">
+
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/purple_button"
+                    android:gravity="center"
+                    android:text="Trailer    "
+                    android:textSize="12dp"
+                    android:textColor="@color/colorWhite"
+                    android:drawableLeft="@drawable/btn_play"
+                    android:paddingLeft="10dp"
+                    android:drawablePadding="5dp"
+                    android:textAllCaps="false"/>
+            </LinearLayout>
+            
+
+
+        </RelativeLayout>
+
+    <TextView
+        android:id="@+id/fragment_detalle_sinopsis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="5"
+        style="@style/NormalBlackSmallField"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@color/colorTransparent"
+            android:weightSum="1"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center">
+
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/purple_button2"
+                    android:gravity="center"
+                    android:text="Capitulo 1    "
+                    android:textSize="12dp"
+                    android:textColor="@color/aPurple"
+                    android:drawableLeft="@drawable/btn_down_purple"
+                    android:paddingLeft="10dp"
+                    android:drawablePadding="5dp"
+                    android:textAllCaps="false"/>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center">
+
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/purple_button"
+                    android:gravity="center"
+                    android:text="Escuchar    "
+                    android:textSize="12dp"
+                    android:textColor="@color/colorWhite"
+                    android:drawableLeft="@drawable/btn_down_white"
+                    android:paddingLeft="10dp"
+                    android:drawablePadding="5dp"
+                    android:textAllCaps="false"/>
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</FrameLayout>
