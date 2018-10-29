@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private home_fragment MainFragment;
     private ArrayList<Categoria_Class> _categorias;
+    private ArrayList<String> _favoritos;
     private static final int REQUEST_CAMERA_PERMISSION = 100;
 
 
@@ -241,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         MenuItem newItem = menu.add(100,1001,100,"Configuración");
+
         getLibros();
 
     }
@@ -292,6 +294,33 @@ public class MainActivity extends AppCompatActivity {
                 _categorias = new ArrayList<>();
 
                 new loadLibros().execute();
+                //Intent intent = new Intent();
+                //intent.setClass(context, presentacion.class);
+                //finish();
+                //startActivity(intent);
+
+            }
+
+            else
+            {
+                common.showWarningDialog("! Sin conexión ¡", "Favor de revisar su conexión de Datos..", this);
+                //alertDialog.dismiss();
+            }
+
+        }
+
+    }
+
+    private void getFavoritos()
+    {
+        if( common.haveInternetPermissions(this, "Login") ) // Revisar permisos de internet
+        {
+
+            if (common.isOnline(this)) // Revisar si tenemos conexión
+            {
+                _categorias = new ArrayList<>();
+
+                new loadFavoritos().execute();
                 //Intent intent = new Intent();
                 //intent.setClass(context, presentacion.class);
                 //finish();
@@ -563,6 +592,82 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute( result );
             _progressDialog.dismiss();
             handleSentLibros( result );
+
+
+        }
+    }
+
+
+    private void handleSentFavoritos( HttpClient.HttpResponse response )
+    {
+        if( response.getCode() == 200 )
+        {
+
+            _favoritos = new ArrayList<>();
+
+
+           try
+            {
+                JSONObject json = new JSONObject( response.getResponse() );
+                JSONArray libros = json.getJSONArray("favoritos");
+
+                for (int i = 0; i < libros.length(); i++)
+                {
+                    JSONObject row = libros.getJSONObject(i);
+                    String id = row.getString("idAudioLibro");
+                 _favoritos.add(id);
+                }
+
+            }
+            catch( Exception e )
+            {
+                android.util.Log.e( "JSONParser", "Cant parse: " + e.getMessage() );
+                // Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
+            }
+
+
+        }
+        else {
+            //Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
+
+        }
+    }
+    private class loadFavoritos extends AsyncTask<Void, Void, HttpClient.HttpResponse>
+    {
+        ProgressDialog _progressDialog;
+
+        public loadFavoritos()
+        {
+
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+            _progressDialog = ProgressDialog.show( MainActivity.this, "Espera un momento..", "Obteniendo Libros..", true );
+
+
+        }
+
+        @Override
+        protected HttpClient.HttpResponse doInBackground( Void... arg0 )
+        {
+
+            ContentValues params = new ContentValues();
+
+            HttpClient.HttpResponse response = HttpClient.post( common.API_URL_BASE + "getfavoritos.php", params );
+            android.util.Log.d( "TEST", String.format( "HTTP CODE: %d RESPONSE: %s", response.getCode(), response.getResponse() ) );
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute( HttpClient.HttpResponse result )
+        {
+            super.onPostExecute( result );
+            _progressDialog.dismiss();
+            handleSentFavoritos( result );
 
 
         }

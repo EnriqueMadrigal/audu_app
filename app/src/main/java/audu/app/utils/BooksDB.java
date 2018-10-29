@@ -85,17 +85,19 @@ public class BooksDB {
         data.put("categorias", c.get_categorias());
         data.put("portada", c.get_portada());
         data.put("trailer", c.get_trailer());
+        data.put("likes", c.get_likes());
 
         _database.insert("libros",null,data);
     }
 
-    public ArrayList<Libro_Class> getLibros()
+
+    public ArrayList<Libro_Class> getLibrosOrderLikes()
     {
         ArrayList<Libro_Class> libros = new ArrayList<>();
         ArrayList<Categoria_Class> categorias = new ArrayList<>();
 
-        String [] columnas = new String[] {"idLIbro", "titulo", "autor", "narrador", "editorial", "ano", "sinopsis", "categorias", "portada", "trailer"};
-        Cursor cursor = _database.query("libros",columnas, null, null, null, null,"idLibro" );
+        String [] columnas = new String[] {"idLIbro", "titulo", "autor", "narrador", "editorial", "ano", "sinopsis", "categorias", "portada", "trailer","likes"};
+        Cursor cursor = _database.query("libros",columnas, null, null, null, null,"likes desc" );
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast())
@@ -111,6 +113,7 @@ public class BooksDB {
             curItem.set_categorias(cursor.getString(7));
             curItem.set_portada(cursor.getString(8));
             curItem.set_trailer(cursor.getString(9));
+            curItem.set_likes(cursor.getInt(10));
 
             libros.add(curItem);
             cursor.moveToNext();
@@ -121,5 +124,6 @@ public class BooksDB {
 
         return libros;
     }
+
 
 }

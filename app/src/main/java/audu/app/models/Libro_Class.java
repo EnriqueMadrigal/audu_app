@@ -13,6 +13,16 @@ public class Libro_Class implements  Serializable {
     private String _categorias;
     private String _portada;
     private String _trailer;
+    private int _likes;
+
+    public int get_likes() {
+        return _likes;
+    }
+
+    public void set_likes(int _likes) {
+        this._likes = _likes;
+    }
+
 
     public int get_idLibro() {
         return _idLibro;

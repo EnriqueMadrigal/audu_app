@@ -24,7 +24,7 @@ public class BooksDBHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL( "CREATE TABLE categorias ( categoriaId INTEGER, categoria TEXT)" );
-        db.execSQL( "CREATE TABLE libros ( idLibro INTEGER, titulo TEXT, autor TEXT, narrador TEXT, editorial TEXT, ano TEXT, sinopsis TEXT, categorias TEXT, portada TEXT, trailer TEXT)" );
+        db.execSQL( "CREATE TABLE libros ( idLibro INTEGER, titulo TEXT, autor TEXT, narrador TEXT, editorial TEXT, ano TEXT, sinopsis TEXT, categorias TEXT, portada TEXT, trailer TEXT, likes INTEGER)" );
         db.execSQL( "CREATE INDEX Libros_id ON libros( idLibro )" );
     }
 
