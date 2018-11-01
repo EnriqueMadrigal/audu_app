@@ -4,15 +4,19 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -40,6 +44,9 @@ import java.util.Date;
 import audu.app.R;
 import audu.app.adapters.bookGridAdapter;
 import audu.app.common;
+import audu.app.fragments.busqueda;
+import audu.app.fragments.categoria;
+import audu.app.fragments.detalle;
 import audu.app.fragments.home_fragment;
 import audu.app.models.Categoria_Class;
 import audu.app.models.Libro_Class;
@@ -67,9 +74,10 @@ public class MainActivity extends AppCompatActivity {
     private home_fragment MainFragment;
     private ArrayList<Categoria_Class> _categorias;
     private ArrayList<String> _favoritos;
-    private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private static final int REQUEST_WRITE_PERMISSION = 100;
     private static final int MENU_CONFIGURACION = 1001;
 
+    private int curFragments = 0;
 
 
 
@@ -150,20 +158,38 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-            Log.d(TAG,"Se seleccion " + String.valueOf(menuItem.getItemId()));
+                        Log.d(TAG, "Se seleccion " + String.valueOf(menuItem.getItemId()));
 
-                int curItemId = menuItem.getItemId();
+                        int curItemId = menuItem.getItemId();
 
-                if (curItemId == MENU_CONFIGURACION)
-                {
-                    close_session();
-                }
+                        if (curItemId == R.id.menu_home) {
+
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            if (curFragments > 0) {
+                                //fragmentManager.popBackStackImmediate();
+                               // fragmentManager.popBackStack("HOME", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                curFragments = 0;
+                            }
+
+                        } else if (curItemId == R.id.menu_libros) {
+
+                        } else if (curItemId == MENU_CONFIGURACION) {
+                            close_session();
+                        } else
+                          {
+                            if (curItemId > 0) {
+                                show_categoria(curItemId);
+                            }
+                        }
 
                         drawerLayout.closeDrawers();
                         return true;
+
                     }
 
                 });
+
                         /////////
 
 ///// Verificar permisos
@@ -171,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED) {
         ActivityCompat.requestPermissions(this,
-                new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+                new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
     }
     else
     {
@@ -180,6 +206,47 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
+
+//Obtener permisos
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_WRITE_PERMISSION) {
+            for (int i = 0; i < permissions.length; i++) {
+                String permission = permissions[i];
+                int grantResult = grantResults[i];
+
+                if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                       getCategorias();
+                    } else {
+                        //requestPermissions(new String[]{Manifest.permission.SEND_SMS}, REQUEST_WRITE_PERMISSION);
+
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage("Es necesario permitir el acceso,para una correcta funcionalidad.")
+                                .setTitle("! Advertencia ¡")
+                                .setCancelable(false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                           finishActivity(0);
+                                           finish();
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+
+
+                    }
+                }
+            }
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -253,6 +320,27 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+    private void  show_categoria(int curCategoria)
+    {
+
+        curFragments++;
+
+        //FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+
+        categoria _categoria = categoria.newInstance(curCategoria);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+        fragmentTransaction.replace( R.id.fragment_container,_categoria, "Categoria" );
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -377,12 +465,15 @@ public class MainActivity extends AppCompatActivity {
         {
             android.util.Log.d( "TEST", "SEARCH: " + search );
 
-         //   products_search _newsearch = products_search.newInstance(search);
-         //   Common.SetPage(1);
-         //   Common.set_curBusquda(search);
-            //Common.setCategoria(curCategoria);
-         //   getSupportFragmentManager().beginTransaction().setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right ).replace( R.id.fragment_container, _newsearch, "New Search" ).commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            busqueda _busqueda = busqueda.newInstance(search);
 
+
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+            fragmentTransaction.replace( R.id.fragment_container,_busqueda, "Busqueda" );
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
 
         }
     }

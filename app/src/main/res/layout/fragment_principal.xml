@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.principal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.30"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/fragment_principal_bigImg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                />
+
+
+            <ImageView
+                android:id="@+id/fragment_principal_smallImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                />
+
+            <LinearLayout
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                >
+
+                <ImageButton
+                    android:id="@+id/fragment_principal_addfavorito"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ico_heart"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:background="@color/colorTransparent"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"/>
+
+
+                <ImageButton
+                    android:id="@+id/fragment_principal_share"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ico_share"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:background="@color/colorTransparent"/>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.10"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/fragment_principal_deletebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ico_deletebook"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:padding="10dp"
+                    android:background="@color/colorTransparent"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/fragment_principal_bookmark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ico_bookmark"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:padding="10dp"
+                    android:background="@color/colorTransparent"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.60"
+            android:background="@color/colorWhite">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fragment_principal_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -5,8 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
+import audu.app.models.Capitulo_Class;
 import audu.app.models.Categoria_Class;
 import audu.app.models.Libro_Class;
 
@@ -64,6 +68,30 @@ public class BooksDB {
          cursor.close();
          return  categorias;
      }
+
+
+    public Categoria_Class getCategoriaById(int curId)
+    {
+        Categoria_Class categoria = new Categoria_Class();
+        String curValue = String.valueOf(curId);
+        String[] values = new String[1];
+        values[0] = curValue;
+        Cursor cursor = _database.query("categorias",new String[] {"categoriaId", "categoria"}, "categoriaId=?", values, null, null,"categoriaId" );
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast())
+        {
+            Categoria_Class curItem = new Categoria_Class();
+            curItem.set_id(cursor.getInt(0));
+            curItem.set_name(cursor.getString(1));
+            categoria = curItem;
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return  categoria;
+    }
+
+
 ///////// LIbros
 
     public void deleteLibros()
@@ -160,5 +188,63 @@ public class BooksDB {
         return libros;
     }
 
+    //////// Capitulos
+
+    public void deleteCapitulos() {
+        _database.delete("capitulos", null , null);
+
+    }
+
+    public void insert (Capitulo_Class c)
+    {
+        ContentValues data = new ContentValues();
+        data.put("idCapitulo", c.get_idCapitulo());
+        data.put("idAudioLibro", c.get_idAudioLibro());
+        data.put("nombreCapitulo", c.get_nombreCapitulo());
+        data.put("subtitulo", c.get_subtitulo());
+        data.put("numCapitulo", c.get_numCapitulo());
+        data.put("downloaded", c.get_downloaded());
+        _database.insert("capitulos",null,data);
+    }
+
+
+
+    public ArrayList<Capitulo_Class> getCapitulosByIdLibro(int curId)
+    {
+        ArrayList<Capitulo_Class> capitulos = new ArrayList<>();
+        String curValue = String.valueOf(curId);
+        String [] columnas = new String[] {"idCapitulo", "idAudioLibro", "nombreCapitulo", "subtitulo", "numCapitulo", "downloaded"};
+        String[] values = new String[1];
+        values[0] = curValue;
+        Cursor cursor = _database.query("capitulos", columnas, "idAudioLibro=?", values, null, null,"numCapitulo" );
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast())
+        {
+            Capitulo_Class curItem = new Capitulo_Class();
+            curItem.set_idCapitulo(cursor.getInt(0));
+            curItem.set_idAudioLibro(cursor.getInt(1));
+            curItem.set_nombreCapitulo(cursor.getString(2));
+            curItem.set_subtitulo(cursor.getString(3));
+            curItem.set_numCapitulo(cursor.getInt(4));
+            curItem.set_downloaded(cursor.getInt(5));
+
+
+            capitulos.add(curItem);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return  capitulos;
+    }
+
+
+    //////// Utils
+
+    private String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 
 }

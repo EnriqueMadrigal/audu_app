@@ -307,8 +307,8 @@ public class splash extends AppCompatActivity {
         TranslateAnimation anim2 = new TranslateAnimation(0, amountToMoveRightLogo, 0, 0);
         anim2.setDuration(1000);
         anim2.setStartOffset(4500);
-        //anim2.setFillEnabled(true);
-        //anim2.setFillAfter(true);
+        anim2.setFillEnabled(true);
+        anim2.setFillAfter(true);
 
         anim2.setAnimationListener(new TranslateAnimation.AnimationListener() {
 
@@ -324,9 +324,11 @@ public class splash extends AppCompatActivity {
 
                 RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) udu_logo.getLayoutParams();
                 //params1.leftMargin += amountToMoveRightLogo;
-                params1.leftMargin = (int) curWidthA *2;
+                params1.leftMargin = params1.leftMargin - (int) amountToMoveRightLogo;
+                //params1.leftMargin = (int) amountToMoveRightLogo;
 
-                udu_logo.setLayoutParams(params1);
+
+        //        udu_logo.setLayoutParams(params1);
 
 
             }

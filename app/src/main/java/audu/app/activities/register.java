@@ -150,10 +150,9 @@ public class register extends AppCompatActivity {
                     return;
                 }
 
-                if (json.getInt("activo") == 1)// Suscripcion Activa
-                {
-
-                }
+            //    if (json.getInt("activo") == 1)// Suscripcion Activa
+           //     {
+           //     }
 
                 if (json.getInt("error") == 0) // No hay errores continuar
                 {
