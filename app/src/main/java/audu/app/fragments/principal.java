@@ -7,6 +7,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +27,14 @@ import java.util.Calendar;
 
 import audu.app.R;
 import audu.app.activities.MainActivity;
+import audu.app.adapters.capituloAdapter;
 import audu.app.common;
 import audu.app.models.Capitulo_Class;
 import audu.app.models.Libro_Class;
 import audu.app.utils.BlurTransformation;
 import audu.app.utils.BooksDB;
 import audu.app.utils.HttpClient;
+import audu.app.utils.IViewHolderClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +66,11 @@ public class principal extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private ArrayList<Capitulo_Class> _capitulos;
+    private capituloAdapter _adapter;
+    private RecyclerView _recycler;
+    private LinearLayoutManager _linearLayoutManager;
+
+    private static String TAG = "principal";
 
     public principal() {
         // Required empty public constructor
@@ -98,6 +110,9 @@ public class principal extends Fragment {
 
         bigImage = (ImageView) _view.findViewById(R.id.fragment_principal_bigImg);
         smallImage = (ImageView) _view.findViewById(R.id.fragment_principal_smallImg);
+        _recycler = (RecyclerView) _view.findViewById(R.id.fragment_principal_recycler);
+
+
 
         String curLink = common.API_URL_BASE + "getPortada.php?idLibro=" + String.valueOf(this.IdBook);
 
@@ -115,7 +130,36 @@ public class principal extends Fragment {
                 .into(bigImage);
 
 
-           getCapitulos();
+        _capitulos = new ArrayList<>();
+
+
+        _adapter = new capituloAdapter(getActivity(), _capitulos, new IViewHolderClick() {
+            @Override
+            public void onClick(int position) {
+                Log.d(TAG, String.valueOf(_capitulos.get(position).get_idCapitulo()));
+
+
+                //myContext.getSupportFragmentManager().beginTransaction().setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right ).replace( R.id.fragment_container,_subCategory, "Sub Categoria" ).commit();
+
+
+
+
+            }
+        });
+
+
+
+        //////////
+
+        _linearLayoutManager = new LinearLayoutManager( getActivity() );
+
+        _recycler.setHasFixedSize( true );
+        _recycler.setAdapter( _adapter );
+        _recycler.setLayoutManager( _linearLayoutManager );
+
+        getCapitulos();
+
+
 
         return _view;
     }
@@ -165,7 +209,7 @@ public class principal extends Fragment {
 
             if (common.isOnline(myContext)) // Revisar si tenemos conexión
             {
-                _capitulos = new ArrayList<>();
+
 
                 new loadCapitulos(IdBook).execute();
                 //Intent intent = new Intent();
@@ -196,7 +240,7 @@ public class principal extends Fragment {
             //db.open();
             //db.deleteLibros();
 
-            _capitulos = new ArrayList<>();
+
             try
             {
                 JSONObject json = new JSONObject( response.getResponse() );
@@ -220,6 +264,8 @@ public class principal extends Fragment {
                     curCap.set_subtitulo(subtitulo);
                     _capitulos.add(curCap);
                 }
+
+                _adapter.notifyDataSetChanged();
 
             }
             catch( Exception e )
