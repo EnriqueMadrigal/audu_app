@@ -182,7 +182,7 @@ public class principal extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
+         }
 
     /**
      * This interface must be implemented by activities that contain this
