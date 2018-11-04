@@ -22,6 +22,13 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -31,6 +38,7 @@ import audu.app.adapters.capituloAdapter;
 import audu.app.common;
 import audu.app.models.Capitulo_Class;
 import audu.app.models.Libro_Class;
+import audu.app.models.SynchronizeResult;
 import audu.app.utils.BlurTransformation;
 import audu.app.utils.BooksDB;
 import audu.app.utils.HttpClient;
@@ -84,10 +92,10 @@ public class principal extends Fragment {
      * @return A new instance of fragment principal.
      */
     // TODO: Rename and change types and number of parameters
-    public static principal newInstance(int IdBook) {
+    public static principal newInstance(Libro_Class _curLibro) {
         principal fragment = new principal();
         Bundle args = new Bundle();
-        args.putInt("IdBook",IdBook);
+        args.putSerializable("Libro", _curLibro);
         fragment.setArguments(args);
         return fragment;
     }
@@ -96,7 +104,8 @@ public class principal extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.IdBook = getArguments().getInt("IdBook");
+           // this.IdBook = getArguments().getInt("IdBook");
+            this.curLibro = (Libro_Class) getArguments().getSerializable("Libro");
         }
     }
 
@@ -114,7 +123,7 @@ public class principal extends Fragment {
 
 
 
-        String curLink = common.API_URL_BASE + "getPortada.php?idLibro=" + String.valueOf(this.IdBook);
+        String curLink = common.API_URL_BASE + "getPortada.php?idLibro=" + String.valueOf(this.curLibro.get_idLibro());
 
 
             Picasso.with(myContext)
@@ -156,6 +165,9 @@ public class principal extends Fragment {
         _recycler.setHasFixedSize( true );
         _recycler.setAdapter( _adapter );
         _recycler.setLayoutManager( _linearLayoutManager );
+
+
+
 
         getCapitulos();
 
@@ -211,7 +223,7 @@ public class principal extends Fragment {
             {
 
 
-                new loadCapitulos(IdBook).execute();
+                new loadCapitulos(curLibro.get_idLibro()).execute();
                 //Intent intent = new Intent();
                 //intent.setClass(context, presentacion.class);
                 //finish();
@@ -228,6 +240,26 @@ public class principal extends Fragment {
         }
 
     }
+
+private void downloadCapitulos()
+{
+
+    for (int i=0;i<_capitulos.size();i++) {
+
+        int curCapId = _capitulos.get(i).get_idCapitulo();
+        new DownloadCap(curCapId, curLibro.get_idLibro(), i).execute();
+
+    }
+
+}
+
+
+private void seDownloadCap(int curCap)
+{
+    _capitulos.get(curCap).set_downloaded(1);
+    _adapter.notifyDataSetChanged();
+
+}
 
 
 
@@ -266,6 +298,8 @@ public class principal extends Fragment {
                 }
 
                 _adapter.notifyDataSetChanged();
+
+                downloadCapitulos();
 
             }
             catch( Exception e )
@@ -325,6 +359,231 @@ public class principal extends Fragment {
 
 
     ///
+
+    private class DownloadCap extends AsyncTask<Void, Void, Integer> {
+        ProgressDialog _progressDialog;
+        private int _CapId;
+        private int _LibroId;
+        private int _numCap;
+
+
+        //final int tipoDescarga = tipo_descarga;
+
+        public DownloadCap(int IdCap, int IdLibro, int NumCap) {
+            _CapId = IdCap;
+            _LibroId = IdLibro;
+            _numCap = NumCap;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+         //   _progressDialog = new ProgressDialog(myContext);
+         //   _progressDialog.setTitle("Descargando Capitulo.");
+         //   _progressDialog.setMessage("Un momento por favor.." + String.valueOf(_CapId));
+         //   _progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+           // _progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+          //  _progressDialog.setCancelable(false);
+         //   _progressDialog.setProgressNumberFormat(null);  // No desplegar el numero actual 10/100
+         //   _progressDialog.setProgressPercentFormat(null); // No desplegar el porcentaje
+         //   _progressDialog.show();
+        }
+
+        @Override
+        protected Integer doInBackground(Void... arg0) {
+            ContentValues params = new ContentValues();
+
+            SynchronizeResult result = new SynchronizeResult();
+
+            publishProgress("Descargando..", "Un momento por favor.", 1, 100);
+
+
+            downloadCommonContent(result);
+
+
+            return result.getResult();
+        }
+
+
+
+
+        private void downloadCommonContent(SynchronizeResult result)
+        {
+
+            //String zipUrl = json.getString( "zip" );
+
+            //String zipUrl = "http://icrm.mypiagui.com:7000/FB_descargas/common.zip";
+            //String zipUrl = "http://192.168.250.249/sitio/static/common.zip";
+            String trailerUrl = common.API_URL_BASE + "getCapitulo.php?idCapitulo=" + String.valueOf(_CapId) +"&idLibro=" + String.valueOf(_LibroId);
+
+
+
+            try
+            {
+
+                // publishProgress("3/3 Procesando contenido...", "Descargando  comun", 1, 1);
+                File root = new File(common.getBaseDirectory());
+                // if (!root.exists()) {
+                //     root.mkdirs();
+                // }
+
+
+                File to = new File(root, String.valueOf(curLibro.get_idLibro()));
+                if (to.exists()) {
+                    //if (!common.deleteDirectory(to)) {
+                    //    throw new Exception("Cannot prepare assets folder!");
+                    //}
+
+                    Log.d(TAG, "Directory exists");
+
+                } else {
+                    to.mkdirs();
+                }
+
+
+
+
+                File cap = new File(to, String.valueOf(_CapId) + ".mp3");
+                if (cap.exists()) {
+                    cap.delete();
+                }
+
+
+
+                if (!download(cap, trailerUrl)) {
+                    throw new Exception("Download of chapter failed!");
+                }
+
+
+
+                //zip.delete();
+
+
+
+            }
+
+            catch (Exception e) {
+                Log.d("SYNC", "Chapter file error: " + e.getMessage());
+                result.setResult(1);
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+
+          //  _progressDialog.dismiss();
+
+			/*
+            if(((Activity) context).isFinishing()) {
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(0);
+            }
+			*/
+
+            seDownloadCap(_numCap);
+        }
+
+
+        //////////////////
+        private void publishProgress(final String title, final String message, final int progress, final int max) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                 //   _progressDialog.setTitle(title);
+                 //   _progressDialog.setMessage(message);
+                 //   _progressDialog.setProgress(progress);
+                  //  _progressDialog.setMax(max);
+
+                }
+            });
+        }
+
+        private void publishProgress(final int progress, final int max) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                  //  _progressDialog.setProgress(progress);
+                  //  _progressDialog.setMax(max);
+                    int curPercent = (progress * 100) / max;
+                    Log.d(TAG, "porcentaje=" + String.valueOf(curPercent));
+
+
+                    _capitulos.get(_numCap).set_progress(curPercent);
+
+                    _adapter.notifyDataSetChanged();
+
+                }
+            });
+        }
+
+
+        ///////
+        private boolean download(File file, String Uurl) {
+            boolean result = false;
+            try {
+                URL url = new URL(Uurl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.connect();
+
+                int response = conn.getResponseCode();
+
+                InputStream inputStream  = new BufferedInputStream(url.openStream(), 8192);
+                try {
+                    if (response == 200) {
+                        int fileLength = conn.getContentLength();
+                        int total = 0;
+
+                        //inputStream = conn.getInputStream();
+
+                        FileOutputStream fileOutput = new FileOutputStream(file);
+
+                        byte[] buffer = new byte[1024];
+                        int bufferLength;
+
+                        while ((bufferLength = inputStream.read(buffer)) > 0) {
+                            fileOutput.write(buffer, 0, bufferLength);
+                            total += bufferLength;
+                            if (fileLength > 0) {
+                                publishProgress(total / 1024, fileLength / 1024);
+
+                            }
+                        }
+                        //close the output stream when done
+                        fileOutput.close();
+                        conn.disconnect();
+                        inputStream.close();
+                        result = true;
+                    } else {
+                        inputStream = conn.getErrorStream();
+                        android.util.Log.d("SYNC", "Cannot download file. ERROR: " + HttpClient.getString(inputStream));
+                    }
+                } catch (Exception e) {
+                    android.util.Log.d("SYNC", "Cannot download file. EXCEPTION: " + e.getMessage());
+                } finally {
+                    if (inputStream != null) {
+                        try {
+                            inputStream.close();
+                        } catch (IOException e) {
+                            // Ignore.
+                        }
+                    }
+                }
+
+                conn.disconnect();
+            } catch (Exception e) {
+                android.util.Log.e("HTTPREQ", "Error sending request: " + e.getMessage());
+            }
+
+            return result;
+        }
+
+/////
+    }
 
 
 }

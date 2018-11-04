@@ -1,12 +1,16 @@
 package audu.app.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -61,6 +65,23 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
         holder.getNombreCapitulo().setText(item.get_nombreCapitulo());
         holder.getSubtituloCapitulo().setText(item.get_subtitulo());
         //holder.getDuracionCapitulo().setText(item.ge);
+
+       int color1 = _context.getResources().getColor(R.color.colorLightGray);
+       int color2 = _context.getResources().getColor(R.color.colorWhite);
+        Drawable drawable = _context.getResources().getDrawable(R.drawable.progress_circle);
+
+
+        holder.progressBar.setProgressDrawable(drawable);
+        holder.progressBar.setProgress(item.get_progress());
+        holder.progressBar.setSecondaryProgress(100);
+        holder.progressBar.setMax(0);
+
+
+        if (item.get_downloaded() != 0)
+        {
+            holder.getLinearRow().setBackgroundColor(color2);
+        }
+
 
 
 
@@ -117,6 +138,26 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
         private TextView duracionCapitulo;
         private ImageButton playCapitulo;
 
+        public ProgressBar getProgressBar() {
+            return progressBar;
+        }
+
+        public void setProgressBar(ProgressBar progressBar) {
+            this.progressBar = progressBar;
+        }
+
+        private ProgressBar progressBar;
+
+        public LinearLayout getLinearRow() {
+            return linearRow;
+        }
+
+        public void setLinearRow(LinearLayout linearRow) {
+            this.linearRow = linearRow;
+        }
+
+        private LinearLayout linearRow;
+
 
         public ViewHolder( View view, IViewHolderClick listener )
         {
@@ -128,6 +169,8 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
             _listener = listener;
             subtituloCapitulo = view.findViewById(R.id.rowSubtitulo);
             nombreCapitulo = view.findViewById(R.id.rowCapitulo);
+            linearRow = view.findViewById(R.id.row_capitulo_layout);
+            progressBar = (ProgressBar) view.findViewById(R.id.circularProgressbar);
         }
 
         public ImageView getIconView()

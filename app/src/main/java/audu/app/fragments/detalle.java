@@ -196,7 +196,7 @@ public class detalle extends Fragment {
                 Log.d(TAG, "Cap 1");
 
                 FragmentManager fragmentManager = getFragmentManager();
-                principal _principal = principal.newInstance(_curLibro.get_idLibro());
+                principal _principal = principal.newInstance(_curLibro);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );

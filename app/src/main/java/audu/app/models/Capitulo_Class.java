@@ -9,6 +9,17 @@ public class Capitulo_Class implements  Serializable {
     private int _numCapitulo;
     private int _downloaded;
 
+    public int get_progress() {
+        return _progress;
+    }
+
+    public void set_progress(int _progress) {
+        this._progress = _progress;
+    }
+
+    private int _progress;
+
+
 
     public Capitulo_Class()
     {
@@ -18,6 +29,7 @@ public class Capitulo_Class implements  Serializable {
         _subtitulo = "";
         _numCapitulo = 0;
         _downloaded = 0;
+        _progress = 0;
     }
 
     public int get_idCapitulo() {
