@@ -68,18 +68,24 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
 
        int color1 = _context.getResources().getColor(R.color.colorLightGray);
        int color2 = _context.getResources().getColor(R.color.colorWhite);
-        Drawable drawable = _context.getResources().getDrawable(R.drawable.progress_circle);
+        //Drawable drawable = _context.getResources().getDrawable(R.drawable.progress_circle);
 
 
-        holder.progressBar.setProgressDrawable(drawable);
-        holder.progressBar.setProgress(item.get_progress());
-        holder.progressBar.setSecondaryProgress(100);
-        holder.progressBar.setMax(0);
+        //holder.progressBar.setProgressDrawable(drawable);
+        //holder.progressBar.setProgress(item.get_progress());
 
+        //holder.progressBar.setSecondaryProgress(100);
+        //holder.progressBar.setMax(0);
+
+        //holder.duracionCapitulo.setText(String.valueOf(item.get_progress()));
+        holder.progressText.setText(String.valueOf(item.get_progress()));
 
         if (item.get_downloaded() != 0)
         {
             holder.getLinearRow().setBackgroundColor(color2);
+            holder.progressBar.setVisibility(View.GONE);
+            holder.progressText.setVisibility(View.GONE);
+            holder.playCapitulo.setVisibility(View.VISIBLE);
         }
 
 
@@ -137,6 +143,17 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
         private TextView subtituloCapitulo;
         private TextView duracionCapitulo;
         private ImageButton playCapitulo;
+        private TextView progressText;
+
+        public TextView getProgressText() {
+            return progressText;
+        }
+
+        public void setProgressText(TextView progressText) {
+            this.progressText = progressText;
+        }
+
+
 
         public ProgressBar getProgressBar() {
             return progressBar;
@@ -171,6 +188,9 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
             nombreCapitulo = view.findViewById(R.id.rowCapitulo);
             linearRow = view.findViewById(R.id.row_capitulo_layout);
             progressBar = (ProgressBar) view.findViewById(R.id.circularProgressbar);
+            duracionCapitulo = (TextView) view.findViewById(R.id.rowTime);
+            progressText = (TextView) view.findViewById(R.id.rowProgressText);
+            playCapitulo = (ImageButton) view.findViewById(R.id.rowButtonPlay);
         }
 
         public ImageView getIconView()

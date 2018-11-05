@@ -3,6 +3,7 @@ package audu.app.fragments;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -257,7 +258,8 @@ private void downloadCapitulos()
 private void seDownloadCap(int curCap)
 {
     _capitulos.get(curCap).set_downloaded(1);
-    _adapter.notifyDataSetChanged();
+
+    _adapter.notifyItemChanged(curCap);
 
 }
 
@@ -379,15 +381,21 @@ private void seDownloadCap(int curCap)
         protected void onPreExecute() {
             super.onPreExecute();
 
-         //   _progressDialog = new ProgressDialog(myContext);
-         //   _progressDialog.setTitle("Descargando Capitulo.");
-         //   _progressDialog.setMessage("Un momento por favor.." + String.valueOf(_CapId));
+           // _progressDialog = new ProgressDialog(myContext);
+          //  _progressDialog.setTitle("Descargando Capitulo.");
+          //  _progressDialog.setMessage("Un momento por favor.." + String.valueOf(_CapId));
          //   _progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-           // _progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+          //  _progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+          //  Drawable drawable = myContext.getResources().getDrawable(R.drawable.progress_circle);
+
+
+          //  _progressDialog.setProgressDrawable(drawable);
+          //  _progressDialog.setSecondaryProgress(100);
+
           //  _progressDialog.setCancelable(false);
-         //   _progressDialog.setProgressNumberFormat(null);  // No desplegar el numero actual 10/100
-         //   _progressDialog.setProgressPercentFormat(null); // No desplegar el porcentaje
-         //   _progressDialog.show();
+          //  _progressDialog.setProgressNumberFormat(null);  // No desplegar el numero actual 10/100
+          //  _progressDialog.setProgressPercentFormat(null); // No desplegar el porcentaje
+           // _progressDialog.show();
         }
 
         @Override
@@ -475,7 +483,7 @@ private void seDownloadCap(int curCap)
         protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
 
-          //  _progressDialog.dismiss();
+            //_progressDialog.dismiss();
 
 			/*
             if(((Activity) context).isFinishing()) {
@@ -506,15 +514,17 @@ private void seDownloadCap(int curCap)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                  //  _progressDialog.setProgress(progress);
-                  //  _progressDialog.setMax(max);
+                   // _progressDialog.setProgress(progress);
+                   // _progressDialog.setMax(max);
                     int curPercent = (progress * 100) / max;
                     Log.d(TAG, "porcentaje=" + String.valueOf(curPercent));
 
 
                     _capitulos.get(_numCap).set_progress(curPercent);
 
-                    _adapter.notifyDataSetChanged();
+
+                    //_adapter.notifyDataSetChanged();
+                    _adapter.notifyItemChanged(_numCap);
 
                 }
             });
