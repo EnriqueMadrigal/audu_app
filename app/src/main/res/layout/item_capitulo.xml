@@ -64,30 +64,27 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ico_purpleplay"
                 android:background="@color/colorTransparent"
-                android:padding="10dp"
+                android:padding="5dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
                 android:visibility="gone"/>
 
             <ProgressBar
-
                 android:id="@+id/circularProgressbar"
-
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:indeterminate="false"
                 android:max="100"
-                android:progress="20"
+                android:progress="1"
                 android:layout_centerInParent="true"
-
+                android:progressDrawable="@drawable/circular"
                 android:secondaryProgress="100"
+                android:background="@color/colorTransparent"
+                android:adjustViewBounds="true"
                 />
 
-            <TextView
-                android:id="@+id/rowProgressText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorBlack"
-                android:layout_centerInParent="true"
-                android:text="100"/>
+
 
 
         </RelativeLayout>

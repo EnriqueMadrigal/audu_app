@@ -78,6 +78,7 @@ public class principal extends Fragment {
     private capituloAdapter _adapter;
     private RecyclerView _recycler;
     private LinearLayoutManager _linearLayoutManager;
+    private boolean isOnlyCap1 = false;
 
     private static String TAG = "principal";
 
@@ -93,10 +94,11 @@ public class principal extends Fragment {
      * @return A new instance of fragment principal.
      */
     // TODO: Rename and change types and number of parameters
-    public static principal newInstance(Libro_Class _curLibro) {
+    public static principal newInstance(Libro_Class _curLibro, boolean only1) {
         principal fragment = new principal();
         Bundle args = new Bundle();
         args.putSerializable("Libro", _curLibro);
+        args.putBoolean("only1", only1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,6 +109,7 @@ public class principal extends Fragment {
         if (getArguments() != null) {
            // this.IdBook = getArguments().getInt("IdBook");
             this.curLibro = (Libro_Class) getArguments().getSerializable("Libro");
+            this.isOnlyCap1 = (boolean) getArguments().getBoolean("only1");
         }
     }
 
@@ -245,10 +248,15 @@ public class principal extends Fragment {
 private void downloadCapitulos()
 {
 
-    for (int i=0;i<_capitulos.size();i++) {
+    int totCapitulos = _capitulos.size();
+    if (isOnlyCap1) totCapitulos = 1;
 
-        int curCapId = _capitulos.get(i).get_idCapitulo();
-        new DownloadCap(curCapId, curLibro.get_idLibro(), i).execute();
+    for (int i=0;i<totCapitulos;i++) {
+
+        Capitulo_Class curCap = _capitulos.get(i);
+        int curCapId = curCap.get_idCapitulo();
+        int curNum = curCap.get_numCapitulo();
+        new DownloadCap(curCap, curLibro.get_idLibro(), i).execute();
 
     }
 
@@ -366,15 +374,17 @@ private void seDownloadCap(int curCap)
         ProgressDialog _progressDialog;
         private int _CapId;
         private int _LibroId;
-        private int _numCap;
+        private int _numRegis;
+
+        private Capitulo_Class curCapitulo;
 
 
         //final int tipoDescarga = tipo_descarga;
 
-        public DownloadCap(int IdCap, int IdLibro, int NumCap) {
-            _CapId = IdCap;
+        public DownloadCap(Capitulo_Class _curCap, int IdLibro, int NumRegis) {
+            curCapitulo = _curCap;
             _LibroId = IdLibro;
-            _numCap = NumCap;
+            _numRegis = NumRegis;
         }
 
         @Override
@@ -396,6 +406,7 @@ private void seDownloadCap(int curCap)
           //  _progressDialog.setProgressNumberFormat(null);  // No desplegar el numero actual 10/100
           //  _progressDialog.setProgressPercentFormat(null); // No desplegar el porcentaje
            // _progressDialog.show();
+
         }
 
         @Override
@@ -404,7 +415,7 @@ private void seDownloadCap(int curCap)
 
             SynchronizeResult result = new SynchronizeResult();
 
-            publishProgress("Descargando..", "Un momento por favor.", 1, 100);
+          //  publishProgress("Descargando..", "Un momento por favor.", 1, 100);
 
 
             downloadCommonContent(result);
@@ -423,7 +434,7 @@ private void seDownloadCap(int curCap)
 
             //String zipUrl = "http://icrm.mypiagui.com:7000/FB_descargas/common.zip";
             //String zipUrl = "http://192.168.250.249/sitio/static/common.zip";
-            String trailerUrl = common.API_URL_BASE + "getCapitulo.php?idCapitulo=" + String.valueOf(_CapId) +"&idLibro=" + String.valueOf(_LibroId);
+            String trailerUrl = common.API_URL_BASE + "getCapitulo.php?idCapitulo=" + String.valueOf(curCapitulo.get_idCapitulo()) +"&idLibro=" + String.valueOf(_LibroId);
 
 
 
@@ -436,8 +447,13 @@ private void seDownloadCap(int curCap)
                 //     root.mkdirs();
                 // }
 
+                String curPath = String.valueOf(curLibro.get_idLibro());
+                if (isOnlyCap1)
+                {
+                    curPath = "0";
+                }
 
-                File to = new File(root, String.valueOf(curLibro.get_idLibro()));
+                File to = new File(root, curPath);
                 if (to.exists()) {
                     //if (!common.deleteDirectory(to)) {
                     //    throw new Exception("Cannot prepare assets folder!");
@@ -452,7 +468,7 @@ private void seDownloadCap(int curCap)
 
 
 
-                File cap = new File(to, String.valueOf(_CapId) + ".mp3");
+                File cap = new File(to, String.valueOf(curCapitulo.get_numCapitulo()) + ".mp3");
                 if (cap.exists()) {
                     cap.delete();
                 }
@@ -492,7 +508,12 @@ private void seDownloadCap(int curCap)
             }
 			*/
 
-            seDownloadCap(_numCap);
+            _capitulos.get(_numRegis).set_downloaded(1);
+
+           //_adapter.notifyItemChanged(_numCap);
+            _adapter.notifyDataSetChanged();
+            Log.d("Capitulo descargado", String.valueOf(curCapitulo.get_numCapitulo()));
+            //seDownloadCap(_numCap);
         }
 
 
@@ -514,17 +535,17 @@ private void seDownloadCap(int curCap)
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                   // _progressDialog.setProgress(progress);
-                   // _progressDialog.setMax(max);
+                    //_progressDialog.setProgress(progress);
+                    //_progressDialog.setMax(max);
                     int curPercent = (progress * 100) / max;
-                    Log.d(TAG, "porcentaje=" + String.valueOf(curPercent));
+                    //Log.d(TAG, "porcentaje=" + String.valueOf(curPercent));
 
 
-                    _capitulos.get(_numCap).set_progress(curPercent);
+                    _capitulos.get(_numRegis).set_progress(curPercent);
 
 
                     //_adapter.notifyDataSetChanged();
-                    _adapter.notifyItemChanged(_numCap);
+                    _adapter.notifyItemChanged(_numRegis);
 
                 }
             });

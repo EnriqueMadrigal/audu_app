@@ -74,6 +74,8 @@ public class detalle extends Fragment {
 
     private Button btn_trailer;
     private Button btn_cap1;
+    private Button btn_downloadBook;
+
 
     private Libro_Class _curLibro;
     private OnFragmentInteractionListener mListener;
@@ -129,6 +131,9 @@ public class detalle extends Fragment {
         txt_sinopsis = (TextView) _view.findViewById(R.id.fragment_detalle_sinopsis);
         btn_trailer = (Button) _view.findViewById(R.id.fragment_detalle_btntrailer);
         btn_cap1 = (Button) _view.findViewById(R.id.fragment_detalle_btnCap1);
+        btn_downloadBook = (Button) _view.findViewById(R.id.fragment_detalle_btndownload);
+
+
 
 
         if (this._curLibro != null)
@@ -196,7 +201,27 @@ public class detalle extends Fragment {
                 Log.d(TAG, "Cap 1");
 
                 FragmentManager fragmentManager = getFragmentManager();
-                principal _principal = principal.newInstance(_curLibro);
+                principal _principal = principal.newInstance(_curLibro, true);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                fragmentTransaction.replace( R.id.fragment_container,_principal, "Principal" );
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
+            }
+
+        });
+
+
+        btn_downloadBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Cap 1");
+
+                FragmentManager fragmentManager = getFragmentManager();
+                principal _principal = principal.newInstance(_curLibro, false);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );

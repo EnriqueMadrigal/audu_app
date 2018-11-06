@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,26 +69,36 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
 
        int color1 = _context.getResources().getColor(R.color.colorLightGray);
        int color2 = _context.getResources().getColor(R.color.colorWhite);
-        //Drawable drawable = _context.getResources().getDrawable(R.drawable.progress_circle);
+        Drawable drawable = _context.getResources().getDrawable(R.drawable.circular);
 
 
-        //holder.progressBar.setProgressDrawable(drawable);
-        //holder.progressBar.setProgress(item.get_progress());
+        holder.progressBar.setProgressDrawable(drawable);
+        holder.progressBar.setProgress(item.get_progress());
 
-        //holder.progressBar.setSecondaryProgress(100);
-        //holder.progressBar.setMax(0);
+        holder.progressBar.setSecondaryProgress(100);
+        holder.progressBar.setMax(100);
 
         //holder.duracionCapitulo.setText(String.valueOf(item.get_progress()));
-        holder.progressText.setText(String.valueOf(item.get_progress()));
+        //holder.progressText.setText(String.valueOf(item.get_progress()));
 
         if (item.get_downloaded() != 0)
         {
             holder.getLinearRow().setBackgroundColor(color2);
             holder.progressBar.setVisibility(View.GONE);
-            holder.progressText.setVisibility(View.GONE);
+
             holder.playCapitulo.setVisibility(View.VISIBLE);
+
         }
 
+        else
+        {
+            holder.getLinearRow().setBackgroundColor(color1);
+            holder.progressBar.setVisibility(View.VISIBLE);
+
+            holder.playCapitulo.setVisibility(View.GONE
+            );
+
+        }
 
 
 
@@ -143,15 +154,6 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
         private TextView subtituloCapitulo;
         private TextView duracionCapitulo;
         private ImageButton playCapitulo;
-        private TextView progressText;
-
-        public TextView getProgressText() {
-            return progressText;
-        }
-
-        public void setProgressText(TextView progressText) {
-            this.progressText = progressText;
-        }
 
 
 
@@ -189,7 +191,7 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
             linearRow = view.findViewById(R.id.row_capitulo_layout);
             progressBar = (ProgressBar) view.findViewById(R.id.circularProgressbar);
             duracionCapitulo = (TextView) view.findViewById(R.id.rowTime);
-            progressText = (TextView) view.findViewById(R.id.rowProgressText);
+
             playCapitulo = (ImageButton) view.findViewById(R.id.rowButtonPlay);
         }
 
