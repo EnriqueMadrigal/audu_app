@@ -149,7 +149,18 @@ public class principal extends Fragment {
         _adapter = new capituloAdapter(getActivity(), _capitulos, new IViewHolderClick() {
             @Override
             public void onClick(int position) {
-                Log.d(TAG, String.valueOf(_capitulos.get(position).get_idCapitulo()));
+
+                Capitulo_Class curCap = _capitulos.get(position);
+                Log.d(TAG, String.valueOf(curCap.get_idCapitulo()));
+
+                FragmentManager fragmentManager = getFragmentManager();
+                playcap _playcap = playcap.newInstance(curLibro, curCap.get_numCapitulo());
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                fragmentTransaction.replace( R.id.fragment_container,_playcap, "PlayCap" );
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
 
                 //myContext.getSupportFragmentManager().beginTransaction().setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right ).replace( R.id.fragment_container,_subCategory, "Sub Categoria" ).commit();
@@ -220,6 +231,30 @@ public class principal extends Fragment {
 
     private void getCapitulos()
     {
+
+        //Revisar si los capitulos ya existen para un libro descargado
+
+        BooksDB db = new BooksDB(myContext);
+        db.open();
+        ArrayList<Capitulo_Class> capitulos = db.getCapitulosByIdLibro(curLibro.get_idLibro());
+        db.close();
+
+        if (capitulos.size()>=1)
+        {
+
+            //Ya existen ya no descargar
+           // _capitulos = new ArrayList<>();
+            for (Capitulo_Class curCap: capitulos)
+            {
+                _capitulos.add(curCap);
+
+            }
+
+            _adapter.notifyDataSetChanged();
+            downloadCapitulos();
+            return;
+        }
+
         if( common.haveInternetPermissions(myContext, "Login") ) // Revisar permisos de internet
         {
 
@@ -254,20 +289,27 @@ private void downloadCapitulos()
     for (int i=0;i<totCapitulos;i++) {
 
         Capitulo_Class curCap = _capitulos.get(i);
-        int curCapId = curCap.get_idCapitulo();
-        int curNum = curCap.get_numCapitulo();
-        new DownloadCap(curCap, curLibro.get_idLibro(), i).execute();
+
+        if (curCap.get_downloaded() == 0) { // SI no se ha descargado, descargar,
+            new DownloadCap(curCap, curLibro.get_idLibro(), i).execute();
+        }
 
     }
 
 }
 
 
-private void seDownloadCap(int curCap)
+private void setDownloadCap(int curCap)
 {
     _capitulos.get(curCap).set_downloaded(1);
 
     _adapter.notifyItemChanged(curCap);
+
+    Capitulo_Class curCapitulo = _capitulos.get(curCap);
+    BooksDB db = new BooksDB(myContext);
+    db.open();
+    db.updateCapituloDownload(1, curCapitulo.get_idCapitulo() );
+    db.close();
 
 }
 
@@ -278,8 +320,8 @@ private void seDownloadCap(int curCap)
         if( response.getCode() == 200 )
         {
 
-            //BooksDB db = new BooksDB(context);
-            //db.open();
+            BooksDB db = new BooksDB(myContext);
+            db.open();
             //db.deleteLibros();
 
 
@@ -305,11 +347,12 @@ private void seDownloadCap(int curCap)
                     curCap.set_numCapitulo(numCapitulo);
                     curCap.set_subtitulo(subtitulo);
                     _capitulos.add(curCap);
+                    if (!isOnlyCap1)  db.insert(curCap);
                 }
 
-                _adapter.notifyDataSetChanged();
 
-                downloadCapitulos();
+
+
 
             }
             catch( Exception e )
@@ -318,6 +361,11 @@ private void seDownloadCap(int curCap)
                 // Common.alert( this, "No se ha podido registrar, por favor intenta nuevamente más tarde." );
             }
 
+            finally {
+                db.close();
+                _adapter.notifyDataSetChanged();
+                downloadCapitulos();
+            }
 
         }
         else {
@@ -508,12 +556,12 @@ private void seDownloadCap(int curCap)
             }
 			*/
 
-            _capitulos.get(_numRegis).set_downloaded(1);
+            //_capitulos.get(_numRegis).set_downloaded(1);
 
            //_adapter.notifyItemChanged(_numCap);
-            _adapter.notifyDataSetChanged();
+           // _adapter.notifyDataSetChanged();
             Log.d("Capitulo descargado", String.valueOf(curCapitulo.get_numCapitulo()));
-            //seDownloadCap(_numCap);
+            setDownloadCap(_numRegis);
         }
 
 

@@ -61,6 +61,8 @@ public class capituloAdapter extends RecyclerView.Adapter<capituloAdapter.ViewHo
     public void onBindViewHolder( ViewHolder holder, int position ) {
         Capitulo_Class item = _items.get(position);
 
+        //Log.d("Adapter","Capitulo:" + String.valueOf(item.get_numCapitulo())  );
+
         holder.setIndex( position );
 
         holder.getNombreCapitulo().setText(item.get_nombreCapitulo());

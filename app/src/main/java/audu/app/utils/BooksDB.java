@@ -92,7 +92,7 @@ public class BooksDB {
     }
 
 
-///////// LIbros
+///////// Libros
 
     public void deleteLibros()
     {
@@ -188,6 +188,113 @@ public class BooksDB {
         return libros;
     }
 
+    /// Libros descargados
+    public void deleteLibros_descargados()
+    {
+        _database.delete("libros_descargados", null , null);
+    }
+
+
+    public void insert_libro_descargado(Libro_Class c)
+    {
+        ContentValues data = new ContentValues();
+        data.put("idLibro", c.get_idLibro());
+        data.put("titulo", c.get_titulo());
+        data.put("autor", c.get_autor());
+        data.put("narrador", c.get_narrador());
+        data.put("editorial", c.get_editorial());
+        data.put("ano", c.get_ano());
+        data.put("sinopsis", c.get_sinopsis());
+        data.put("categorias", c.get_categorias());
+        data.put("portada", c.get_portada());
+        data.put("trailer", c.get_trailer());
+        data.put("likes", c.get_likes());
+
+        _database.insert("libros_descargados",null,data);
+    }
+
+
+    public ArrayList<Libro_Class> getLibros_descargados()
+    {
+        ArrayList<Libro_Class> libros = new ArrayList<>();
+
+        String [] columnas = new String[] {"idLibro", "titulo", "autor", "narrador", "editorial", "ano", "sinopsis", "categorias", "portada", "trailer","likes"};
+        Cursor cursor = _database.query("libros_descargados",columnas, null, null, null, null,"idLibro" );
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast())
+        {
+            Libro_Class curItem = new Libro_Class();
+            curItem.set_idLibro(cursor.getInt(0));
+            curItem.set_titulo(cursor.getString(1));
+            curItem.set_autor(cursor.getString(2));
+            curItem.set_narrador(cursor.getString(3));
+            curItem.set_editorial(cursor.getString(4));
+            curItem.set_ano(cursor.getString(5));
+            curItem.set_sinopsis(cursor.getString(6));
+            curItem.set_categorias(cursor.getString(7));
+            curItem.set_portada(cursor.getString(8));
+            curItem.set_trailer(cursor.getString(9));
+            curItem.set_likes(cursor.getInt(10));
+
+            libros.add(curItem);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+
+
+        return libros;
+    }
+
+
+    public Libro_Class getLibro_Descargado(int IdLibro)
+    {
+
+        Libro_Class curLibro;
+        curLibro = new Libro_Class();
+
+        String [] columnas = new String[] {"idLibro", "titulo", "autor", "narrador", "editorial", "ano", "sinopsis", "categorias", "portada", "trailer","likes"};
+        String[] values = new String[1];
+        values[0] = String.valueOf(IdLibro);
+
+
+        Cursor cursor = _database.query("libros_descargados",columnas, "idLibro=?", values, null, null,"idLibro" );
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast())
+        {
+            Libro_Class curItem = new Libro_Class();
+            curItem.set_idLibro(cursor.getInt(0));
+            curItem.set_titulo(cursor.getString(1));
+            curItem.set_autor(cursor.getString(2));
+            curItem.set_narrador(cursor.getString(3));
+            curItem.set_editorial(cursor.getString(4));
+            curItem.set_ano(cursor.getString(5));
+            curItem.set_sinopsis(cursor.getString(6));
+            curItem.set_categorias(cursor.getString(7));
+            curItem.set_portada(cursor.getString(8));
+            curItem.set_trailer(cursor.getString(9));
+            curItem.set_likes(cursor.getInt(10));
+
+           curLibro = curItem;
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        if (curLibro.get_idLibro() != 0)
+        {
+            return curLibro;
+        }
+
+        else
+        {
+            return null;
+        }
+
+    }
+
+
     //////// Capitulos
 
     public void deleteCapitulos() {
@@ -207,6 +314,14 @@ public class BooksDB {
         _database.insert("capitulos",null,data);
     }
 
+
+    public void updateCapituloDownload(int newValue, int curId)
+    {
+        ContentValues data = new ContentValues();
+        data.put("downloaded", newValue);
+        _database.update("capitulos",data,"idCapitulo="+ String.valueOf(curId), null);
+
+    }
 
 
     public ArrayList<Capitulo_Class> getCapitulosByIdLibro(int curId)

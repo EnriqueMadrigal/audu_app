@@ -1,13 +1,28 @@
 package audu.app.fragments;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Timer;
+
 import audu.app.R;
+import audu.app.common;
+import audu.app.models.Capitulo_Class;
+import audu.app.models.Libro_Class;
+import audu.app.utils.BlurTransformation;
+import audu.app.utils.BooksDB;
 
 
 /**
@@ -18,11 +33,44 @@ import audu.app.R;
  * Use the {@link playcap#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class playcap extends Fragment {
+public class playcap extends Fragment implements SeekBar.OnSeekBarChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private Context myContext;
+
+
+    private ImageView bigImage;
+    private ImageView smallImage;
+
+
+    private Libro_Class curLibro;
+    private int curCapitulo;
+    ArrayList<Capitulo_Class> capitulos;
+
+    private SeekBar seekbar;
+
+    private ImageButton favoriteBtn;
+    private ImageButton shareBtn;
+
+    private ImageButton playBtn;
+    private ImageButton fwBtn;
+    private ImageButton previousBtn;
+    private ImageButton tempoBtn;
+    private ImageButton nextBtn;
+
+    private ImageButton bookmarkBtn;
+    private ImageButton capsBtn;
+
+
+    MediaPlayer player;
+    private boolean isPlaying = false;
+    private boolean isPaused = false;
+    Timer timer;
+
+    public boolean libroYaDescargado = false;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -38,16 +86,14 @@ public class playcap extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment playcap.
      */
     // TODO: Rename and change types and number of parameters
-    public static playcap newInstance(String param1, String param2) {
+    public static playcap newInstance(Libro_Class _curlibro, int _curCapitulo) {
         playcap fragment = new playcap();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+       args.putSerializable("libro", _curlibro);
+       args.putSerializable("capitulo", _curCapitulo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,16 +102,70 @@ public class playcap extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+           curLibro = (Libro_Class) getArguments().getSerializable("libro");
+           curCapitulo = getArguments().getInt("capitulo");
         }
+
+        BooksDB db = new BooksDB(myContext);
+        db.open();
+        Libro_Class _curLibro = db.getLibro_Descargado(curLibro.get_idLibro());
+        if (_curLibro !=null)
+        {
+            libroYaDescargado = true;
+        }
+
+        db.close();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playcap, container, false);
+        //return inflater.inflate(R.layout.fragment_playcap, container, false);
+
+
+        View _view;
+        _view = inflater.inflate( R.layout.fragment_playcap, container, false );
+
+        bigImage = (ImageView) _view.findViewById(R.id.fragment_playcap_bigImg);
+        smallImage = (ImageView) _view.findViewById(R.id.fragment_playcap_smallImg);
+
+        favoriteBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_addfavorito);
+        shareBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_share);
+
+        previousBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_previous);
+        fwBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_fw);
+        playBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_play);
+        tempoBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_tempo);
+        nextBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_next);
+        bookmarkBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_bookmark);
+        capsBtn = (ImageButton) _view.findViewById(R.id.fragment_playcap_caps);
+
+
+
+
+        //Cargar las imagenes
+        String curLink = common.API_URL_BASE + "getPortada.php?idLibro=" + String.valueOf(this.curLibro.get_idLibro());
+
+
+        Picasso.with(myContext)
+                .load(curLink)
+                .placeholder(R.drawable.placeholder)
+                .into(smallImage);
+
+
+        Picasso.with(myContext)
+                .load(curLink)
+                .placeholder(R.drawable.placeholder)
+                .transform(new BlurTransformation(myContext))
+                .into(bigImage);
+
+
+
+
+        return  _view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -77,19 +177,30 @@ public class playcap extends Fragment {
 
     @Override
     public void onAttach(Context context) {
+      myContext = context;
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 
     /**

@@ -5,6 +5,7 @@ import android.arch.core.executor.TaskExecutor;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Timer;
@@ -40,6 +42,7 @@ import audu.app.activities.register;
 import audu.app.common;
 import audu.app.models.Libro_Class;
 import audu.app.models.SynchronizeResult;
+import audu.app.utils.BooksDB;
 import audu.app.utils.HttpClient;
 
 /**
@@ -86,6 +89,8 @@ public class detalle extends Fragment {
     private boolean isPaused = false;
     Timer timer;
 
+    public boolean libroYaDescargado = false;
+
     public detalle() {
         // Required empty public constructor
     }
@@ -114,6 +119,16 @@ public class detalle extends Fragment {
            // mParam2 = getArguments().getString(ARG_PARAM2);
             this._curLibro = (Libro_Class) getArguments().getSerializable("Libro");
         }
+
+        BooksDB db = new BooksDB(myContext);
+        db.open();
+        Libro_Class curLibro = db.getLibro_Descargado(_curLibro.get_idLibro());
+        if (curLibro !=null)
+        {
+            libroYaDescargado = true;
+        }
+
+        db.close();
     }
 
     @Override
@@ -134,6 +149,13 @@ public class detalle extends Fragment {
         btn_downloadBook = (Button) _view.findViewById(R.id.fragment_detalle_btndownload);
 
 
+        if (libroYaDescargado)
+        {
+            btn_cap1.setEnabled(false);
+            btn_cap1.setVisibility(View.INVISIBLE);
+            //Drawable drawable = myContext.getResources().getDrawable(R.drawable.purple_button3);
+            //btn_cap1.setBackground(drawable);
+        }
 
 
         if (this._curLibro != null)
@@ -200,6 +222,8 @@ public class detalle extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "Cap 1");
 
+
+
                 FragmentManager fragmentManager = getFragmentManager();
                 principal _principal = principal.newInstance(_curLibro, true);
 
@@ -218,16 +242,12 @@ public class detalle extends Fragment {
         btn_downloadBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Cap 1");
+                Log.d(TAG, "DownloadBook");
 
-                FragmentManager fragmentManager = getFragmentManager();
-                principal _principal = principal.newInstance(_curLibro, false);
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-                fragmentTransaction.replace( R.id.fragment_container,_principal, "Principal" );
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                DownloadBook();
+
+
 
 
             }
@@ -290,6 +310,76 @@ public class detalle extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private  void DownloadBook()
+    {
+        if (!libroYaDescargado)
+        {
+            BooksDB db = new BooksDB(myContext);
+            db.open();
+            db.insert_libro_descargado(_curLibro);
+            db.close();
+        }
+
+        img_libro.buildDrawingCache();
+        Bitmap bm = img_libro.getDrawingCache();
+
+        //Save caratula
+
+        File root = new File(common.getBaseDirectory());
+
+        String curPath = String.valueOf(_curLibro.get_idLibro());
+        File to = new File(root, curPath);
+        if (to.exists()) {
+
+            Log.d(TAG, "Directory exists");
+
+        } else {
+            to.mkdirs();
+        }
+
+
+
+        File car = new File(to, "portada.png");
+        if (car.exists()) {
+            car.delete();
+        }
+
+
+        Uri outputFileUri;
+        OutputStream fOut = null;
+
+        try
+        {
+            fOut = new FileOutputStream(car);
+        }
+        catch (Exception e)
+        {
+        Log.d(TAG, "Could not save image");
+        }
+        try {
+            bm.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e)
+        {
+            Log.d(TAG, "Could not save image");
+        }
+
+
+
+        ////
+        FragmentManager fragmentManager = getFragmentManager();
+        principal _principal = principal.newInstance(_curLibro, false);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+        fragmentTransaction.replace( R.id.fragment_container,_principal, "Principal" );
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+    }
+
 
     private void setPaused(boolean paused)
     {
