@@ -509,6 +509,10 @@ public class MainActivity extends AppCompatActivity {
             db.open();
             db.deleteCategorias();
 
+            //db.deleteCapitulos();
+            //db.deleteLibros();
+            //db.deleteLibros_descargados();
+
             try
             {
                 JSONObject json = new JSONObject( response.getResponse() );

@@ -9,7 +9,7 @@ import audu.app.common;
 
 public class BooksDBHelper extends SQLiteOpenHelper{
 
-    private final static int DB_VERSION = 5;
+    private final static int DB_VERSION = 6;
     public final static String DB_NAME = "audu_books_db.s3db";
 
     public BooksDBHelper(Context context )
@@ -44,6 +44,11 @@ public class BooksDBHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS libros");
+        db.execSQL("DROP TABLE IF EXISTS capitulos");
+        db.execSQL("DROP TABLE IF EXISTS libros_descargados");
+        db.execSQL("DROP TABLE IF EXISTS bookmarks");
+        db.execSQL("DROP TABLE IF EXISTS favoritos");
+
         db.execSQL( "CREATE TABLE libros ( idLibro INTEGER, titulo TEXT, autor TEXT, narrador TEXT, editorial TEXT, ano TEXT, sinopsis TEXT, categorias TEXT, portada TEXT, trailer TEXT, likes INTEGER)" );
         db.execSQL( "CREATE INDEX Libros_id ON libros( idLibro )" );
 

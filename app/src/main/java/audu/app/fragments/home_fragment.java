@@ -134,17 +134,22 @@ public class home_fragment extends Fragment {
 
 
 
-        BooksDB db = new BooksDB(myContext);
-        db.open();
-        _libros = db.getLibros();
-        ArrayList<Libro_Class>  _favoritos = db.getLibrosOrderLikes();
-        db.close();
 
 
         final ArrayList<Libro_Class> nuevos = new ArrayList<>();
         final ArrayList<Libro_Class> recomendados = new ArrayList<>();
         final ArrayList<Libro_Class> favoritos = new ArrayList<>();
-        ArrayList<Libro_Class> mislibros = new ArrayList<>();
+        final ArrayList<Libro_Class> mislibros = new ArrayList<>();
+
+
+
+        BooksDB db = new BooksDB(myContext);
+        db.open();
+        _libros = db.getLibros();
+        ArrayList<Libro_Class>  _favoritos = db.getLibrosOrderLikes();
+        ArrayList<Libro_Class> _mislibros = db.getLibros_descargados();
+        db.close();
+
 
         //Obtener los últimos
 
@@ -245,15 +250,31 @@ public class home_fragment extends Fragment {
 
         // Mis libros
 
-        mislibros = new ArrayList<>();
+
+        for (Libro_Class curlibro: _mislibros)
+        {
+        mislibros.add(curlibro);
+        }
+
         _adapter4 = new bookGridAdapter( myContext, mislibros, new IViewHolderClick()
         {
             @Override
             public void onClick( int position )
             {
                 //onHomeGridItemSelected( position );
-                Libro_Class curLibro = favoritos.get(position);
+                Libro_Class curLibro = mislibros.get(position);
                 Log.d(TAG, "book Selected " + String.valueOf(curLibro.get_idLibro()));
+
+                FragmentManager fragmentManager = getFragmentManager();
+                principal _principal = principal.newInstance(curLibro, false);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                fragmentTransaction.replace( R.id.fragment_container,_principal, "Principal" );
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
             }
         } );
 

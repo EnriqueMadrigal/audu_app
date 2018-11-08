@@ -171,7 +171,10 @@ public class common {
         //File file = new File( Environment.getExternalStorageDirectory(), BASE_DIRECTORY );
         File file =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         boolean creado = file.mkdirs();
-        return file.getAbsolutePath();
+        File to = new File(file, "audu");
+        boolean creado2 = to.mkdirs();
+
+        return to.getAbsolutePath();
 
     }
 
