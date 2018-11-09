@@ -153,8 +153,10 @@ public class principal extends Fragment {
                 Capitulo_Class curCap = _capitulos.get(position);
                 Log.d(TAG, String.valueOf(curCap.get_idCapitulo()));
 
+                if (curCap.get_downloaded() == 0) return;
+
                 FragmentManager fragmentManager = getFragmentManager();
-                playcap _playcap = playcap.newInstance(curLibro, curCap.get_numCapitulo());
+                playcap _playcap = playcap.newInstance(curLibro, curCap.get_numCapitulo(), curCap);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );

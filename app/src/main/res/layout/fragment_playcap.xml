@@ -89,6 +89,7 @@
                android:orientation="horizontal"
                android:gravity="center_horizontal">
 <TextView
+    android:id="@+id/fragment_playcap_text_autor"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     style="@style/NormalBlackField"
@@ -100,9 +101,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.5"
-                android:gravity="center_horizontal">
+                android:gravity="center">
 
                 <TextView
+                    android:id="@+id/fragment_playcap_text_capitulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/NormalBlackBigField"
@@ -226,10 +228,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.05"
+        android:layout_weight="0.10"
         android:background="@color/colorLightGray"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1">
 
         <SeekBar
@@ -239,6 +241,51 @@
             android:progressTint="@color/colorBlack"
             android:thumb="@drawable/custom_seekbar1"
             android:progressBackgroundTint="@color/colorGray"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:gravity="start">
+
+                <TextView
+                    android:id="@+id/fragment_playcap_txt_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/NormalBlackSmallField"
+                    android:paddingStart="10dp"
+                    android:text="00:00"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/fragment_playcap_text_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="10dp"
+                    style="@style/NormalBlackSmallField"
+                    android:text="00:00"/>
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -256,10 +303,11 @@
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal">
             <TextView
+                android:id="@+id/fragment_playcap_txt_subtitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/NormalBlackField"
-                android:text="Subtiulo"/>
+                android:text="Subtitulo"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -322,7 +370,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12dp"
-                    android:text="capitulos"/>
+                    android:text="bookmark"/>
 
             </LinearLayout>
 
