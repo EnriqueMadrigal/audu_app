@@ -1,0 +1,224 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="audu.app.fragments.useroptions">
+
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:background="@color/colorWhite">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="0.25">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="@color/mainBlue">
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="@color/colorLightGray">
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+   <ImageView
+       android:id="@+id/fragment_useroptions_bigImg"
+       android:layout_width="wrap_content"
+       android:layout_height="match_parent"
+       android:paddingTop="10dp"
+       android:paddingBottom="10dp"
+       android:scaleType="fitCenter"
+       android:background="@color/colorTransparent"
+       android:src="@drawable/men"
+       />
+
+
+
+</RelativeLayout>
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="0.25"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fragment_useroptions_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/NormalBlackField"
+            android:text="Nombre del usuario"/>
+
+
+        <TextView
+            android:id="@+id/fragment_useroptions_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/NormalBlackSmallField"
+            android:text="email"/>
+
+        <TextView
+            android:id="@+id/fragment_useroptions_miembro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/NormalBlackSmallField"
+            android:text="miembro desde:"/>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:gravity="end">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:gravity="end"
+            android:weightSum="1"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/fragment_useroptions_downloads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/NormalBlackField"
+                    android:text="0"/>
+
+                <TextView
+                    android:id="@+id/fragment_useroptions_num_donwloads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/NormalBlackSmallField"
+                    android:text="Descargas"/>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/fragment_useroptions_book"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/NormalBlackField"
+                    android:text="0"/>
+
+                <TextView
+                    android:id="@+id/fragment_useroptions_num_books"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/NormalBlackSmallField"
+                    android:text="Libros"/>
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:gravity="end">
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="0.5">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_useroptions_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
+
+
+</LinearLayout>
+
+
+</FrameLayout>
