@@ -4,47 +4,42 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import audu.app.R;
-import audu.app.models.User_Settings;
-import audu.app.util;
+import audu.app.utils.JustifyTextView;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link suscripcion.OnFragmentInteractionListener} interface
+ * {@link terminos.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link suscripcion#newInstance} factory method to
+ * Use the {@link terminos#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class suscripcion extends Fragment {
+public class terminos extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
+
+
     private String mParam1;
     private String mParam2;
 
-    private Context myContext;
-    private static String TAG = "suscripcion";
     private OnFragmentInteractionListener mListener;
 
-    private TextView miembro_desde;
-    private Button entendido;
 
+    private Context myContext;
 
-    public suscripcion() {
+    private TextView _terminos;
+    public terminos() {
         // Required empty public constructor
     }
 
@@ -52,12 +47,14 @@ public class suscripcion extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment suscripcion.
+
+     * @return A new instance of fragment terminos.
      */
     // TODO: Rename and change types and number of parameters
-    public static suscripcion newInstance() {
-        suscripcion fragment = new suscripcion();
+    public static terminos newInstance() {
+        terminos fragment = new terminos();
         Bundle args = new Bundle();
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,43 +62,25 @@ public class suscripcion extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
 
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_suscripcion, container, false);
-
+        //return inflater.inflate(R.layout.fragment_terminos, container, false);
 
         View _view;
-        _view = inflater.inflate( R.layout.fragment_suscripcion, container, false );
+        _view = inflater.inflate( R.layout.fragment_terminos, container, false );
 
-        miembro_desde = (TextView) _view.findViewById(R.id.fragment_suscripcion_miembro);
-        entendido = (Button) _view.findViewById(R.id.fragment_suscripcion_entendido);
+        _terminos = (TextView) _view.findViewById(R.id.fragment_terminos_aviso);
 
-        util Util = new util(myContext);
+        _terminos.setMovementMethod(new ScrollingMovementMethod());
 
-        User_Settings curUser = Util.getUserSettings();
-
-
-        Date start_date = curUser.get_start_date();
-        miembro_desde.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(start_date));
-
-
-        entendido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Entendido");
-                //getActivity().getFragmentManager().popBackStack();
-                getActivity().onBackPressed();
-            }
-
-        });
-
-        return _view;
-
+        return  _view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -113,7 +92,7 @@ public class suscripcion extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-       myContext= context;
+       myContext = context;
         super.onAttach(context);
 
     }

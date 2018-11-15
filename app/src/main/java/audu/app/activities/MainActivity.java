@@ -347,7 +347,7 @@ private void show_configuration()
 
 }
 
-    private void close_session()
+    public void close_session()
     {
 
         util Util = new util(this);

@@ -2,7 +2,10 @@ package audu.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -188,6 +191,7 @@ public class util {
        editor.putString(common.VAR_USER_EMAIL, newUserSettings.get_email());
        editor.putLong(common.VAR_USER_STARTDATE, newUserSettings.get_start_date().getTime());
        editor.putInt(common.VAR_USER_ID, newUserSettings.get_userid());
+       editor.putString(common.VAR_USER_PASSWORD, newUserSettings.get_pass());
        editor.commit();
     }
 
@@ -201,6 +205,7 @@ public class util {
         calendar.setTimeInMillis(sharedPref.getLong(common.VAR_USER_STARTDATE,0));
         curUserSettings.set_start_date(calendar.getTime());
         curUserSettings.set_userid(sharedPref.getInt(common.VAR_USER_ID,0));
+        curUserSettings.set_pass(sharedPref.getString(common.VAR_USER_PASSWORD,""));
 
         return curUserSettings;
     }
@@ -217,57 +222,34 @@ public class util {
     }
 
 
+    public String GetCurrentVersion()
+    {
+
+        String curVersion="";
+
+
+
+        PackageManager pm = context.getPackageManager();
+        String packageName = context.getPackageName();
+        int flags = PackageManager.GET_PERMISSIONS;
+        PackageInfo packageInfo = null;
+
+        try {
+            packageInfo = pm.getPackageInfo(packageName, flags);
+            // versionCode = packageInfo.versionCode;
+            curVersion = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+//			e.printStackTrace();
+            Log.e("Actualizar", e.getMessage());
+            return "";
+        }
 
 
 
 
+        return curVersion;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 

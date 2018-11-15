@@ -1,0 +1,135 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="audu.app.fragments.comentarios">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/NormalBlackBigField"
+            android:text="Comentarios y asistencia"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/NormalBlackSmallField"
+                android:text="Cuentanos tus sugerencias, problemas o dudas."/>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/NormalGraySmallField"
+                android:text="En breve nos pondremos en contacto contigo."/>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+
+        <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/black_rounded_corners">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="120sp"
+        android:background="@android:color/transparent"
+        android:id="@+id/fragment_comentarios_comentario"
+       style="@style/NormalBlackSmallField"
+        android:hint="Escribe aqui tu comentario"
+        android:textColorHint="@color/colorGray"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="0dp"
+        android:layout_gravity="top"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:maxLines="8"
+        />
+
+</LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="60dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:weightSum="1"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.60"
+                android:text="Enviar"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/purple_button"
+                android:id="@+id/fragment_comentarios_enviar"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

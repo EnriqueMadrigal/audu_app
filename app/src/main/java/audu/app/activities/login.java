@@ -148,11 +148,13 @@ private String TAG = "Login";
 
 
                     User_Settings newUserSettings = new User_Settings();
+                    String curPass = passwordUser.getText().toString();
 
                     newUserSettings.set_name(nombreUsuario);
                     newUserSettings.set_email(emailUsuario);
                     newUserSettings.set_userid(Suscripcion);
                     newUserSettings.set_start_date(convertedDate);
+                    newUserSettings.set_pass(curPass);
 
                     util Util = new util(this);
                     Util.saveUserSetting(newUserSettings);

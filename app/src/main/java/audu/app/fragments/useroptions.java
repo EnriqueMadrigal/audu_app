@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import audu.app.R;
+import audu.app.activities.MainActivity;
 import audu.app.adapters.optionsAdapter;
 import audu.app.common;
 import audu.app.models.General_class;
@@ -188,6 +189,44 @@ public class useroptions extends Fragment {
                 }
 
 
+
+                if (curId==3) // Cambiar contraseaña
+                {
+                    passchange _passchange = passchange.newInstance();
+
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                    fragmentTransaction.replace( R.id.fragment_container,_passchange, "PassChange" );
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+
+
+
+                if (curId==4) // Ajustes
+                {
+
+                    ajustes _ajustes = ajustes.newInstance();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                    fragmentTransaction.replace( R.id.fragment_container,_ajustes, "Ajustes" );
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+
+
+                if (curId==5) // Terminos
+                {
+
+
+                }
+
+
+                if (curId==6) // Cerrar session
+                {
+                    ((MainActivity) getActivity()).close_session();
+
+                }
 
                 //playcap _playcap = playcap.newInstance(curLibro, curCap.get_numCapitulo(), curCap);
 

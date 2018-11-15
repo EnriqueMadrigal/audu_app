@@ -1,0 +1,60 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="audu.app.fragments.terminos">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/NormalBlackBigField"
+            android:text="Términos y privacidad"/>
+
+
+    </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+
+
+<TextView
+    android:id="@+id/fragment_terminos_aviso"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingBottom="80dp"
+    android:text="@string/aviso_completo"
+    android:textColor="@color/colorBlack"
+    android:textSize="12dp"
+    android:minLines="1"
+    android:maxLines = "2000"
+    android:scrollbars = "vertical"/>
+
+    </LinearLayout>
+
+
+
+
+</FrameLayout>
