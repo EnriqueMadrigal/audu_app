@@ -24,11 +24,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -48,6 +50,8 @@ import audu.app.fragments.busqueda;
 import audu.app.fragments.categoria;
 import audu.app.fragments.detalle;
 import audu.app.fragments.home_fragment;
+import audu.app.fragments.mislibros;
+import audu.app.fragments.useroptions;
 import audu.app.models.Categoria_Class;
 import audu.app.models.Libro_Class;
 import audu.app.models.User_Settings;
@@ -102,9 +106,30 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle( "" );
 
+    ImageButton btnClear = (ImageButton) toolbar.findViewById( R.id.btnClear );
+    EditText txtSearch = (EditText) toolbar.findViewById( R.id.txtSearch );
+    btnClear.setOnClickListener( new View.OnClickListener()
+    {
+        @Override
+        public void onClick( View v )
+        {
+            onClearSearchText();
+        }
+    } );
+    txtSearch.setOnEditorActionListener( new TextView.OnEditorActionListener()
+    {
+        @Override
+        public boolean onEditorAction( TextView v, int actionId, KeyEvent event )
+        {
+            search();
+            return true;
+        }
+    } );
 
 
-        //View headerView = navigationView.inflateHeaderView(R.layout.header_navview);
+
+
+    //View headerView = navigationView.inflateHeaderView(R.layout.header_navview);
 
         View headerView =  navigationView.getHeaderView(0);
         menuName = (TextView) headerView.findViewById(R.id.navview_text1);
@@ -173,9 +198,12 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         } else if (curItemId == R.id.menu_libros) {
+                           show_mislibros();
+
 
                         } else if (curItemId == MENU_CONFIGURACION) {
-                            close_session();
+                            //close_session();
+                            show_configuration();
                         } else
                           {
                             if (curItemId > 0) {
@@ -303,6 +331,21 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+private void show_configuration()
+{
+    curFragments++;
+    FragmentManager fragmentManager = getSupportFragmentManager();
+
+    useroptions _useroptions = useroptions.newInstance();
+
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+    fragmentTransaction.replace( R.id.fragment_container,_useroptions, "User Options" );
+    fragmentTransaction.addToBackStack(null);
+    fragmentTransaction.commit();
+
+
+}
 
     private void close_session()
     {
@@ -321,6 +364,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    private void show_mislibros()
+    {
+        curFragments++;
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        mislibros _mislibros = mislibros.newInstance();
+
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+        fragmentTransaction.replace( R.id.fragment_container,_mislibros, "Principal" );
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
     private void  show_categoria(int curCategoria)
     {
@@ -463,6 +522,7 @@ public class MainActivity extends AppCompatActivity {
         txtSearch.setText( "" );
         if( search.length() > 0 )
         {
+            curFragments++;
             android.util.Log.d( "TEST", "SEARCH: " + search );
 
             FragmentManager fragmentManager = getSupportFragmentManager();

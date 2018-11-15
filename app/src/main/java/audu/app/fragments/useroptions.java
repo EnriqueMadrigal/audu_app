@@ -4,11 +4,30 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import audu.app.R;
+import audu.app.adapters.optionsAdapter;
+import audu.app.common;
+import audu.app.models.General_class;
+import audu.app.models.Libro_Class;
+import audu.app.models.User_Settings;
+import audu.app.util;
+import audu.app.utils.BooksDB;
+import audu.app.utils.IViewHolderClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +51,20 @@ public class useroptions extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+
+    private optionsAdapter _adapter;
+    private RecyclerView _recycler;
+    private ArrayList<General_class> _items;
+    private LinearLayoutManager _linearLayoutManager;
+
+    private ImageView _iconImage;
+    private TextView _nombre;
+    private TextView _email;
+    private TextView _miembro;
+    private  TextView _descargas;
+    private TextView _libros;
+    private static String TAG = "useroptions";
+
     public useroptions() {
         // Required empty public constructor
     }
@@ -40,16 +73,15 @@ public class useroptions extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment useroptions.
      */
     // TODO: Rename and change types and number of parameters
-    public static useroptions newInstance(String param1, String param2) {
+    public static useroptions newInstance() {
         useroptions fragment = new useroptions();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+       // args.putString(ARG_PARAM1, param1);
+        //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,6 +103,115 @@ public class useroptions extends Fragment {
         _view = inflater.inflate( R.layout.fragment_useroptions, container, false );
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_useroptions, container, false);
+
+
+        _iconImage = (ImageView) _view.findViewById(R.id.fragment_useroptions_bigImg);
+        _nombre = (TextView) _view.findViewById(R.id.fragment_useroptions_name);
+        _email = (TextView) _view.findViewById(R.id.fragment_useroptions_email);
+        _miembro = (TextView) _view.findViewById(R.id.fragment_useroptions_miembro);
+        _descargas = (TextView) _view.findViewById(R.id.fragment_useroptions_downloads);
+        _libros = (TextView) _view.findViewById(R.id.fragment_useroptions_num_books);
+        _recycler = (RecyclerView) _view.findViewById(R.id.fragment_useroptions_recycler);
+
+
+        util Util = new util(myContext);
+
+        User_Settings curUser = Util.getUserSettings();
+
+        _nombre.setText(curUser.get_name());
+        _email.setText(curUser.get_email());
+
+        Date start_date = curUser.get_start_date();
+        _miembro.setText("Miembro desde:" + DateFormat.getDateInstance(DateFormat.SHORT).format(start_date));
+
+        BooksDB db = new BooksDB(myContext);
+        db.open();
+        ArrayList<Libro_Class> libros = db.getLibros_descargados();
+        db.close();
+
+        _descargas.setText(String.valueOf(libros.size()));
+
+        int curAvatar = Util.getAvatar();
+        String Avatar = common.avateres[curAvatar];
+        int id = myContext.getResources().getIdentifier(Avatar, "drawable", myContext.getPackageName());
+
+        if (id>0)
+        {
+            _iconImage.setImageResource(id);
+        }
+
+
+        _items = new ArrayList<>();
+
+        _items.add(new General_class(0, R.drawable.ico_accstar, "Mis Logros"));
+        _items.add(new General_class(1, R.drawable.ico_accach, "Suscripción"));
+        _items.add(new General_class(2, R.drawable.creditcard_icon, "Metódos de Pago"));
+        _items.add(new General_class(3, R.drawable.ico_acclock, "Cambiar contraseña"));
+        _items.add(new General_class(4, R.drawable.ajustes_icon, "Ajustes"));
+        _items.add(new General_class(5, R.drawable.ico_accach, "Preferencias"));
+        _items.add(new General_class(6, R.drawable.ico_cerrarsesion, "Cerrar sessión"));
+
+
+
+        _adapter = new optionsAdapter(getActivity(), _items, new IViewHolderClick() {
+            @Override
+            public void onClick(int position) {
+
+                General_class curItem = _items.get(position);
+                int curId = curItem.get_id();
+
+
+
+                Log.d(TAG, String.valueOf(curId));
+
+
+                FragmentManager fragmentManager = getFragmentManager();
+
+                if (curId==0)
+                {
+                    logros _mislogros = logros.newInstance();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                    fragmentTransaction.replace( R.id.fragment_container,_mislogros, "Mis Logros" );
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+               }
+
+                if (curId==1)
+                {
+                    suscripcion _suscripcion = suscripcion.newInstance();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                    fragmentTransaction.replace( R.id.fragment_container,_suscripcion, "Suscripcion" );
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+
+
+
+                //playcap _playcap = playcap.newInstance(curLibro, curCap.get_numCapitulo(), curCap);
+
+                //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                //fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                //fragmentTransaction.replace( R.id.fragment_container,_playcap, "PlayCap" );
+                //fragmentTransaction.addToBackStack(null);
+                //fragmentTransaction.commit();
+
+
+
+
+            }
+        });
+
+
+
+
+        _linearLayoutManager = new LinearLayoutManager( getActivity() );
+
+        _recycler.setHasFixedSize( true );
+        _recycler.setAdapter( _adapter );
+        _recycler.setLayoutManager( _linearLayoutManager );
+
 
 
 

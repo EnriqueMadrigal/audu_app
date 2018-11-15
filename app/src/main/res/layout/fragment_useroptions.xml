@@ -90,14 +90,14 @@
             android:id="@+id/fragment_useroptions_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/NormalBlackSmallField"
+            style="@style/NormalGraySmallField"
             android:text="email"/>
 
         <TextView
             android:id="@+id/fragment_useroptions_miembro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/NormalBlackSmallField"
+            style="@style/NormalGraySmallField"
             android:text="miembro desde:"/>
 
 
@@ -148,7 +148,7 @@
                     android:id="@+id/fragment_useroptions_num_donwloads"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/NormalBlackSmallField"
+                    style="@style/NormalGraySmallField"
                     android:text="Descargas"/>
 
 
@@ -174,8 +174,8 @@
                     android:id="@+id/fragment_useroptions_num_books"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/NormalBlackSmallField"
-                    android:text="Libros"/>
+                    style="@style/NormalGraySmallField"
+                    android:text="Libros Leidos"/>
 
             </LinearLayout>
 
