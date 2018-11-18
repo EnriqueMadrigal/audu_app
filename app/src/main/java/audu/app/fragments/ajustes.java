@@ -43,6 +43,8 @@ public class ajustes extends Fragment {
     private ToggleButton toggleButton;
     private LinearLayout acercade_layout;
     private LinearLayout terminos_layout;
+    private LinearLayout preguntas_layout;
+    private LinearLayout avatar_layout;
 
     private TextView version;
     public ajustes() {
@@ -83,6 +85,8 @@ public class ajustes extends Fragment {
         toggleButton = (ToggleButton) _view.findViewById(R.id.fragment_ajustes_muestralibros);
         acercade_layout = (LinearLayout) _view.findViewById(R.id.fragment_ajustes_acercade);
         terminos_layout = (LinearLayout) _view.findViewById(R.id.fragment_ajustes_terminos);
+        preguntas_layout = (LinearLayout) _view.findViewById(R.id.fragment_ajustes_preguntas);
+        avatar_layout = (LinearLayout) _view.findViewById(R.id.fragment_ajustes_avatar);
         version = (TextView) _view.findViewById(R.id.fragment_ajustes_version);
 
 
@@ -123,6 +127,43 @@ public class ajustes extends Fragment {
             }
 
         });
+
+        preguntas_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Preguntas");
+                //getActivity().getFragmentManag getActivity().onBackPressed();
+
+                FragmentManager fragmentManager = getFragmentManager();
+                preguntas _preguntas = preguntas.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                fragmentTransaction.replace( R.id.fragment_container,_preguntas, "Preguntas" );
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+
+        });
+
+
+        avatar_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Terminos");
+                //getActivity().getFragmentManag getActivity().onBackPressed();
+
+                FragmentManager fragmentManager = getFragmentManager();
+
+                avatar _avatar = avatar.newInstance();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                fragmentTransaction.replace( R.id.fragment_container,_avatar, "Avatar" );
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+
+        });
+
 
         util Util = new util(myContext);
         String curVersion = Util.GetCurrentVersion();

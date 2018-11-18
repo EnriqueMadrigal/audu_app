@@ -67,12 +67,12 @@
                android:layout_width="0dp"
                android:layout_weight="0.20"
                android:layout_height="wrap_content"
-               android:paddingTop="20dp"
-               android:paddingBottom="15dp">
+               android:paddingTop="5dp"
+               android:paddingBottom="5dp">
 
                <ToggleButton
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
+                   android:layout_width="50dp"
+                   android:layout_height="30dp"
                    android:layout_gravity="center"
                    android:background="@drawable/toggle_selector"
                    android:textOn=""
@@ -217,6 +217,7 @@
 
 
        <LinearLayout
+           android:id="@+id/fragment_ajustes_preguntas"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:orientation="vertical"
@@ -253,6 +254,7 @@
 
 
        <LinearLayout
+           android:id="@+id/fragment_ajustes_avatar"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:orientation="vertical"
