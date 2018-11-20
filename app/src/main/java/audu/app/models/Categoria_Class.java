@@ -4,6 +4,18 @@ import java.io.Serializable;
 public class Categoria_Class implements  Serializable  {
     private Integer _id;
     private String _name;
+    private boolean _selected;
+
+
+    public boolean is_selected() {
+        return _selected;
+    }
+
+    public void set_selected(boolean _selected) {
+        this._selected = _selected;
+    }
+
+
 
     public Integer get_id() {
         return _id;
@@ -26,6 +38,9 @@ public class Categoria_Class implements  Serializable  {
     {
         this._id = 0;
         this._name = "";
+        this._selected = false;
+
+
 
     }
 

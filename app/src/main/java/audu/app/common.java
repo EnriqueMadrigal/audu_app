@@ -49,9 +49,10 @@ public class common {
     public static String VAR_USER_SUSCRIPTION = "0";
     public static String VAR_TOKEN_ID = "USER_TOKEN_ID";
     public static String VAR_DEVICE_SESSION_ID = "DEVICE_SESSION_ID";
+    public static String VAR_LOGIN_TYPE = "LOGIN_TYPE";
 
 
-    public static String[] avateres = {"men_avatar", "woman_avatar"};
+    public static String[] avateres = {"men", "woman"};
 
 
     public static final String BASE_DIRECTORY = ".audu";

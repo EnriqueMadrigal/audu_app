@@ -84,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private int curFragments = 0;
 
 
-
-@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -98,52 +97,46 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.iconohamburguesa);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        setTitle( "" );
+        setTitle("");
 
-    ImageButton btnClear = (ImageButton) toolbar.findViewById( R.id.btnClear );
-    EditText txtSearch = (EditText) toolbar.findViewById( R.id.txtSearch );
-    btnClear.setOnClickListener( new View.OnClickListener()
-    {
-        @Override
-        public void onClick( View v )
-        {
-            onClearSearchText();
-        }
-    } );
-    txtSearch.setOnEditorActionListener( new TextView.OnEditorActionListener()
-    {
-        @Override
-        public boolean onEditorAction( TextView v, int actionId, KeyEvent event )
-        {
-            search();
-            return true;
-        }
-    } );
+        ImageButton btnClear = (ImageButton) toolbar.findViewById(R.id.btnClear);
+        EditText txtSearch = (EditText) toolbar.findViewById(R.id.txtSearch);
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClearSearchText();
+            }
+        });
+        txtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                search();
+                return true;
+            }
+        });
 
 
+        //View headerView = navigationView.inflateHeaderView(R.layout.header_navview);
 
-
-    //View headerView = navigationView.inflateHeaderView(R.layout.header_navview);
-
-        View headerView =  navigationView.getHeaderView(0);
+        View headerView = navigationView.getHeaderView(0);
         menuName = (TextView) headerView.findViewById(R.id.navview_text1);
         menuEmail = (TextView) headerView.findViewById(R.id.navview_text2);
         menuImage = (ImageView) headerView.findViewById(R.id.navview_image);
 
 
-       // MainFragment = new home_fragment();
-       // getSupportFragmentManager().beginTransaction().setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right ).replace( R.id.fragment_container, MainFragment, "HOME" ).commit();
+        // MainFragment = new home_fragment();
+        // getSupportFragmentManager().beginTransaction().setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right ).replace( R.id.fragment_container, MainFragment, "HOME" ).commit();
 
 
         //-------------------
 
-    //--------------
+        //--------------
 
 
         util Util = new util(this);
@@ -157,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         //navMenuView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
 
         final Menu menu = navigationView.getMenu();
-        menu.add ("Categorías");
+        menu.add("Categorías");
 /*
         for (int i = 1; i <= 3; i++) {
             MenuItem newItem = menu.add(i,100 + i,i,"Item " + i);
@@ -168,15 +161,7 @@ public class MainActivity extends AppCompatActivity {
 */
 
         int curAvatar = Util.getAvatar();
-        String Avatar = common.avateres[curAvatar];
-        int id = context.getResources().getIdentifier(Avatar, "drawable", context.getPackageName());
-
-        if (id>0)
-        {
-            menuImage.setImageResource(id);
-        }
-
-
+        setAvatar(curAvatar);
 
         //////////
         navigationView.setNavigationItemSelectedListener(
@@ -192,20 +177,19 @@ public class MainActivity extends AppCompatActivity {
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             if (curFragments > 0) {
                                 //fragmentManager.popBackStackImmediate();
-                               // fragmentManager.popBackStack("HOME", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                // fragmentManager.popBackStack("HOME", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                 fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                 curFragments = 0;
                             }
 
                         } else if (curItemId == R.id.menu_libros) {
-                           show_mislibros();
+                            show_mislibros();
 
 
                         } else if (curItemId == MENU_CONFIGURACION) {
                             //close_session();
                             show_configuration();
-                        } else
-                          {
+                        } else {
                             if (curItemId > 0) {
                                 show_categoria(curItemId);
                             }
@@ -218,22 +202,20 @@ public class MainActivity extends AppCompatActivity {
 
                 });
 
-                        /////////
+        /////////
 
 ///// Verificar permisos
-    if (ContextCompat.checkSelfPermission(context,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-        ActivityCompat.requestPermissions(this,
-                new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
-    }
-    else
-    {
-        getCategorias();
-    }
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
+        } else {
+            getCategorias();
+        }
 
 
-}
+    }
 
 //Obtener permisos
 
@@ -248,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                       getCategorias();
+                        getCategorias();
                     } else {
                         //requestPermissions(new String[]{Manifest.permission.SEND_SMS}, REQUEST_WRITE_PERMISSION);
 
@@ -259,14 +241,13 @@ public class MainActivity extends AppCompatActivity {
                                 .setCancelable(false)
                                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                           finishActivity(0);
-                                           finish();
+                                        finishActivity(0);
+                                        finish();
 
                                     }
                                 });
                         AlertDialog alert = builder.create();
                         alert.show();
-
 
 
                     }
@@ -298,8 +279,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
 
-
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
 
             /*
             case R.id.show_menu:
@@ -312,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
-
 
 
             //  case R.id.go_home:
@@ -330,6 +309,22 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void setAvatar(int curAvatar) {
+
+        String Avatar = common.avateres[curAvatar];
+        int id = context.getResources().getIdentifier(Avatar, "drawable", context.getPackageName());
+
+        if (id>0)
+        {
+            menuImage.setImageResource(id);
+        }
+
+
+    }
+
+
+
 
 private void show_configuration()
 {

@@ -2,16 +2,27 @@ package audu.app.activities;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONObject;
 
@@ -25,14 +36,20 @@ import audu.app.models.User_Settings;
 import audu.app.util;
 import audu.app.utils.HttpClient;
 
-public class login extends AppCompatActivity {
+public class login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     private Button RegistroButton;
     private Button LoginButton;
+    private ImageButton LoginGoogle;
 
     private EditText loginUser;
     private EditText passwordUser;
+
+    private GoogleApiClient mGoogleApiClient;
+
+
 private String TAG = "Login";
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +61,30 @@ private String TAG = "Login";
 
         loginUser = (EditText) findViewById(R.id.txtLoginEmail);
         passwordUser = (EditText) findViewById(R.id.txtLoginPassword);
+        LoginGoogle = (ImageButton) findViewById(R.id.buttonLoginGoogle);
+
+        //// Google
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
 
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        LoginGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Registro Google");
+
+                signIn();
+
+            }
+
+        });
 
         RegistroButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +111,73 @@ private String TAG = "Login";
     }
 
 
+
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+
+        // Si es de Facebook
+        //callbackManager.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            //       mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getEmail()));
+            //  updateUI(true);
+            saveEmail(acct.getEmail());
+            saveUserName(acct.getGivenName() + " " + acct.getFamilyName());
+            setLoginType("google");
+
+            new SyncTask( acct.getEmail(), acct.getGivenName(),"android" ).execute();
+            Intent intent = new Intent();
+            intent.setClass(this, presentacion.class);
+            finish();
+            startActivity(intent);
+
+        } else {
+            // Signed out, show unauthenticated UI.
+            // updateUI(false);
+            showInternetErrorDialog();
+        }
+    }
+
+
+
+
+    protected void showInternetErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Error: \nSin acceso a Internet. \nComprueba la conexión de red y  vuelve a Intentarlo")
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
+    //////////////
     private void LoginUser() {
 
         if( common.haveInternetPermissions(this, "Login") ) // Revisar permisos de internet
@@ -162,6 +268,7 @@ private String TAG = "Login";
                     Util.setUserId(Suscripcion);
                     Util.userHasLogged();
                     Util.setSuscripcion("0");
+                    Util.setLoginType("email");
 
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
@@ -258,6 +365,8 @@ private String TAG = "Login";
         }
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-
+    }
 }

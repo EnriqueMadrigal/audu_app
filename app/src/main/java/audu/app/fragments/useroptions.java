@@ -215,9 +215,14 @@ public class useroptions extends Fragment {
                 }
 
 
-                if (curId==5) // Terminos
+                if (curId==5) // preferencias
                 {
-
+                    preferencias _preferencias = preferencias.newInstance();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                    fragmentTransaction.replace( R.id.fragment_container,_preferencias, "Ajustes" );
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
 
                 }
 

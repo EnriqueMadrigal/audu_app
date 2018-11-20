@@ -146,6 +146,18 @@ public class util {
     }
 
 
+    public void setLoginType(String newloginType)
+    {
+
+        editor.putString( common.VAR_LOGIN_TYPE, newloginType );
+        editor.commit();
+    }
+
+    public String getLoginType()
+    {
+        return sharedPref.getString(common.VAR_LOGIN_TYPE, "");
+    }
+
     public void setFechaPago(Date newFecha)
     {
         editor.putLong(common.VAR_USER_FECHA_PAGO, newFecha.getTime());

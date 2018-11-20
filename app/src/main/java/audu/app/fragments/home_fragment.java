@@ -27,6 +27,7 @@ import audu.app.R;
 import audu.app.adapters.bookGridAdapter;
 import audu.app.models.Categoria_Class;
 import audu.app.models.Libro_Class;
+import audu.app.util;
 import audu.app.utils.BooksDB;
 import audu.app.utils.IViewHolderClick;
 
@@ -182,7 +183,10 @@ public class home_fragment extends Fragment {
 
         // Obtener Recomendados
 
-        String opciones = "8,2,5";
+        util Util = new util(myContext);
+        String opciones = Util.getUserPreferences();
+
+        if (opciones.length()==0) opciones = "8,2,5";
 
         for(Libro_Class curLibro: _libros)
         {
@@ -194,6 +198,8 @@ public class home_fragment extends Fragment {
                 if(opciones.contains(curCategoria))
                 {
                     recomendados.add(curLibro);
+
+                    if (recomendados.size()>15) break;
                     continue;
                 }
 

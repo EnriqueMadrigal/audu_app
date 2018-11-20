@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="audu.app.fragments.preguntas">
+    tools:context="audu.app.fragments.preferencias">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/NormalBlackBigField"
-            android:text="Preguntas frecuentes"/>
+            android:text="Preferencias"/>
 
 
     </LinearLayout>
@@ -36,12 +36,13 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"/>
 
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="380dp">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/fragment_preguntas_recycler"
+                android:id="@+id/fragment_preferencias_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -51,9 +52,29 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:weightSum="1"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.60"
+                android:text="Actualizar"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/purple_button"
+                android:id="@+id/fragment_preferencias_cambiar"/>
+
+        </LinearLayout>
 
 
     </LinearLayout>
-
 
 </FrameLayout>

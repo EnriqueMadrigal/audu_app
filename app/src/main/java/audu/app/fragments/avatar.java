@@ -16,8 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import audu.app.R;
+import audu.app.activities.MainActivity;
 import audu.app.adapters.MyPageAdapter;
+import audu.app.util;
 import audu.app.utils.BoxIndicator;
+import audu.app.utils.BoxIndicator2;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,7 +115,7 @@ public class avatar extends Fragment {
             }
         });
 
-        BoxIndicator indicator = (BoxIndicator) _view.findViewById( R.id.fragment_avatar_BoxIndicator );
+        BoxIndicator2 indicator = (BoxIndicator2) _view.findViewById( R.id.fragment_avatar_BoxIndicator );
         indicator.setViewPager( mPager );
 
         fList.add(banner_image_class_resource.newInstance(R.drawable.men));
@@ -121,6 +124,22 @@ public class avatar extends Fragment {
 
         myPageAdapter.notifyDataSetChanged();
 
+cambiar_btn.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Log.d(TAG, "Enviar");
+        //getActivity().getFragmentManag getActivity().onBackPressed();
+
+   util Util = new util(myContext);
+   Util.setAvatar(currentPage);
+
+        ((MainActivity)getActivity()).setAvatar(currentPage);
+        getActivity().onBackPressed();
+
+
+    }
+
+});
 
         return  _view;
     }
