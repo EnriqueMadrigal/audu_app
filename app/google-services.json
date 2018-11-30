@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "579739891586",
+    "firebase_url": "https://audumx-223119.firebaseio.com",
+    "project_id": "audumx-223119",
+    "storage_bucket": "audumx-223119.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579739891586:android:de05e852c3ad75b2",
+        "android_client_info": {
+          "package_name": "audu.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "579739891586-9vac443rvhcjdm9ev2kp5gl5lverbvrr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "audu.app",
+            "certificate_hash": "aa0cbcf3d8c73692948be1a5a0c98769e5e359db"
+          }
+        },
+        {
+          "client_id": "579739891586-dv63aml2jmo0ks1rm1i08994vnigth3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTAmU4ma57TiDVmRKsbsAgTTmA3U4zX5g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "579739891586-dv63aml2jmo0ks1rm1i08994vnigth3i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

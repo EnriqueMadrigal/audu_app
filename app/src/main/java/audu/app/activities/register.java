@@ -303,6 +303,11 @@ public class register extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent(getApplicationContext(), login.class));
+        finish();
+    }
 
 }

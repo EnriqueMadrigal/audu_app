@@ -59,6 +59,12 @@ public class common {
 
 
 
+    public static String MERCHANT_ID = "mqf7saj3doumquj3znvo";             // Generated in Openpay account registration
+    public static String API_KEY = "pk_7babd5ad992c440a81d4482d9ffd7026";  // Generated in Openpay account registration
+
+    public static boolean productionMode = false;
+
+
     public static float getScreenWidthPixels(Context context)
     {
 

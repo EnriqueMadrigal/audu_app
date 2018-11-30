@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -35,6 +36,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -60,7 +69,7 @@ import audu.app.utils.BooksDB;
 import audu.app.utils.HttpClient;
 import audu.app.utils.IViewHolderClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private TextView menuName;
     private TextView menuEmail;
@@ -82,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MENU_CONFIGURACION = 1001;
 
     private int curFragments = 0;
+    private GoogleApiClient mGoogleApiClient;
 
 
     @Override
@@ -146,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
         menuName.setText(curUser.get_name());
         menuEmail.setText(curUser.get_email());
 
+        //Util.setSuscripcion("0"); // Solo para pruebas
+
         //NavigationMenuView navMenuView = (NavigationMenuView) navigationView.getChildAt(0);
         //navMenuView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
 
@@ -203,6 +215,18 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         /////////
+
+
+        ///Google
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
 ///// Verificar permisos
         if (ContextCompat.checkSelfPermission(context,
@@ -349,7 +373,18 @@ private void show_configuration()
         Util.clearUserId();
         Util.clearUserName();
         Util.clearUserSettings();
+        String loginType = Util.getLoginType();
 
+        if (loginType.equals("google"))
+        {
+            signOut();
+            return;
+        }
+
+        else if (loginType.equals("facebook"))
+        {
+            LoginManager.getInstance().logOut();
+        }
 
         Intent intent = new Intent();
         intent.setClass(context, intro.class);
@@ -358,6 +393,27 @@ private void show_configuration()
 
 
     }
+
+
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        // updateUI(false);
+                        // [END_EXCLUDE]
+                        Intent intent = new Intent();
+                        intent.setClass(context, intro.class);
+                        finish();
+                        startActivity(intent);
+
+                    }
+                });
+    }
+
+
+
 
 
     private void show_mislibros()
@@ -752,6 +808,14 @@ private void show_configuration()
 
         }
     }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+
+    }
+
+
 
 
 }

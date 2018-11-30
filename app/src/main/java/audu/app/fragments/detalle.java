@@ -42,6 +42,7 @@ import audu.app.activities.register;
 import audu.app.common;
 import audu.app.models.Libro_Class;
 import audu.app.models.SynchronizeResult;
+import audu.app.util;
 import audu.app.utils.BooksDB;
 import audu.app.utils.HttpClient;
 
@@ -244,9 +245,28 @@ public class detalle extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "DownloadBook");
 
+                util _util = new util(myContext);
+                String curSusc = _util.getSuscripcion();
+                if (curSusc.equals("0"))
+                {
+                    FragmentManager fragmentManager = getFragmentManager();
 
-                DownloadBook();
+                    suscribirse _suscribirse = suscribirse.newInstance();
 
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                    fragmentTransaction.replace( R.id.fragment_container,_suscribirse, "MetodosPago" );
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+
+
+
+
+                }
+
+                else if (curSusc.equals("1")) {
+                    DownloadBook();
+                }
 
 
 

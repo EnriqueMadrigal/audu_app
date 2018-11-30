@@ -85,6 +85,7 @@ public class playcap extends Fragment implements MediaPlayer.OnCompletionListene
     Timer timer;
     private int curPos = 1;
     public boolean libroYaDescargado = false;
+    private boolean canPlayNextChapter = true;
 
     private int curCapituloPos = 0;
     private int curMaxCapitulos = 0;
@@ -629,6 +630,13 @@ private void setChapterValues()
                                         }
 
                                         Log.d(TAG, "finished playing");
+
+                                        if (canPlayNextChapter)
+                                        {
+                                            playNextCap();
+                                            return;
+                                        }
+
                                         timer.cancel();
                                         timer.purge();
                                         timer = null;

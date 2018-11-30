@@ -1,11 +1,13 @@
 package audu.app.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -189,16 +191,74 @@ public class useroptions extends Fragment {
                 }
 
 
-
-                if (curId==3) // Cambiar contraseaña
+                if (curId==2)
                 {
-                    passchange _passchange = passchange.newInstance();
+                    metodospago _metodospago = metodospago.newInstance();
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
-                    fragmentTransaction.replace( R.id.fragment_container,_passchange, "PassChange" );
+                    fragmentTransaction.replace( R.id.fragment_container,_metodospago, "MetodosPago" );
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
+                }
+
+
+
+                if (curId==3) // Cambiar contraseaña
+                {
+
+                    util Util = new util(myContext);
+                    String loginType = Util.getLoginType();
+
+                    if (loginType.equals("google"))
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
+                        builder.setMessage("Imposible cambiar contraseña debido a que se dio de alta con una cuenta de Google.")
+                                .setTitle("! Información ¡")
+                                .setCancelable(false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        getActivity().onBackPressed();
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+
+                    }
+
+
+                    else if (loginType.equals("facebook"))
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
+                        builder.setMessage("Imposible cambiar contraseña debido a que se dio de alta con una cuenta de Facebook.")
+                                .setTitle("! Información ¡")
+                                .setCancelable(false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        getActivity().onBackPressed();
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+
+
+                    }
+
+
+
+                    else {
+                        passchange _passchange = passchange.newInstance();
+
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                        fragmentTransaction.replace(R.id.fragment_container, _passchange, "PassChange");
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
                 }
 
 
@@ -229,7 +289,22 @@ public class useroptions extends Fragment {
 
                 if (curId==6) // Cerrar session
                 {
-                    ((MainActivity) getActivity()).close_session();
+
+                    new AlertDialog.Builder( myContext )
+                            .setTitle("Mensaje")
+                            .setMessage( "¿Estás seguro de que deseas cerrar tu sesión?" )
+                            .setCancelable( false )
+                            .setPositiveButton( "Si", new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int id )
+                                {
+                                    ((MainActivity) getActivity()).close_session();
+                                }
+                            } )
+                            .setNegativeButton( "No", null )
+                            .show();
+
+
 
                 }
 

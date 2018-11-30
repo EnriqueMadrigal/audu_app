@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:background="@color/colorWhite">
 
-        <RelativeLayout
+ <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:id="@+id/home_fragment_layout"
@@ -75,7 +75,7 @@
         android:textSize="16sp"
         android:textColor="@color/aPurple"
         android:background="@drawable/button1"
-        android:id="@+id/btnLoginIniciar"/>
+        android:id="@+id/fragment_home_suscribirme"/>
     </LinearLayout>
 
 </LinearLayout>

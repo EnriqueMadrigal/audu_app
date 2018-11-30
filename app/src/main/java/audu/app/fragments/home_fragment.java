@@ -16,6 +16,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -63,6 +64,8 @@ public class home_fragment extends Fragment {
 
     private LinearLayout parent_layout;
 
+    private Button btn_suscribirme;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -109,6 +112,29 @@ public class home_fragment extends Fragment {
 
         imageLayout = (RelativeLayout) _view.findViewById(R.id.home_fragment_layout);
         parent_layout = (LinearLayout) _view.findViewById(R.id.parent_linear_layout);
+        btn_suscribirme = (Button) _view.findViewById(R.id.fragment_home_suscribirme);
+
+
+
+        btn_suscribirme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Suscribirme");
+                FragmentManager fragmentManager = getFragmentManager();
+
+                metodospago _metodospago = metodospago.newInstance();
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations( android.R.anim.slide_in_left, android.R.anim.slide_out_right );
+                fragmentTransaction.replace( R.id.fragment_container,_metodospago, "MetodosPago" );
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+
+
+            }
+
+        });
 
 
         Display display = myContext.getWindowManager().getDefaultDisplay();
@@ -185,6 +211,14 @@ public class home_fragment extends Fragment {
 
         util Util = new util(myContext);
         String opciones = Util.getUserPreferences();
+
+        String curSuscription = Util.getSuscripcion();
+
+        if (curSuscription.equals("1"))
+        {
+            hideMainSuscriptionTitle();
+            Log.d(TAG, "Hidding");
+        }
 
         if (opciones.length()==0) opciones = "8,2,5";
 
@@ -300,6 +334,16 @@ public class home_fragment extends Fragment {
 
         return _view;
     }
+
+
+    public void hideMainSuscriptionTitle()
+    {
+        imageLayout.setVisibility(View.GONE);
+
+    }
+
+
+
 
 
     private void show_detalle(Libro_Class curLibro)

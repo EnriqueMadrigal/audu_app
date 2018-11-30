@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_card"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <EditText
+        android:id="@+id/holder_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/holder_name"
+        />
+
+<TextView
+    android:id="@+id/holder_name_message"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@style/NormalSmallRedField"
+    android:text=""/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+
+
+    <EditText
+        android:id="@+id/card_number"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/card_number"
+        android:inputType="numberDecimal"
+        android:maxLength="16"
+        />
+
+    <TextView
+        android:id="@+id/card_number_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/NormalSmallRedField"
+        android:text=""/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+
+    <EditText
+        android:id="@+id/cvv2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/cvv"
+        android:inputType="numberDecimal"
+        android:maxLength="4"
+        />
+
+    <TextView
+        android:id="@+id/cvv2_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/NormalSmallRedField"
+        android:text=""/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/NormalGrayField"
+        android:text="Expiración"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+
+
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <Spinner
+        android:id="@+id/year_spinner"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:entries="@array/year_array" />
+
+    <Spinner
+        android:id="@+id/month_spinner"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        android:entries="@array/month_array" />
+
+
+
+</LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center">
+
+    <Button
+        android:id="@+id/cancelCard"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/button_cancel" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/saveCard"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/button_save" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

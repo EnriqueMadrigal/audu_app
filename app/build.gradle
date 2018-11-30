@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.audu.app"
+        applicationId "audu.app"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
@@ -15,6 +15,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    lintOptions {
+
+        checkReleaseBuilds false
+
     }
 }
 
@@ -28,6 +34,15 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation files('libs/picasso-2.5.2.jar')
+    implementation files('libs/openpay-v2.0.1.aar')
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:15.0.0'
+    implementation 'com.facebook.android:facebook-login:[4,5)'
+
+    implementation 'com.google.http-client:google-http-client:1.23.0'
+    implementation 'com.google.http-client:google-http-client-android:1.23.0'
+    implementation 'com.google.http-client:google-http-client-jackson2:1.23.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.2'
 
 }
